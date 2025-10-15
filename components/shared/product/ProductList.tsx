@@ -1,3 +1,4 @@
+import { Product } from "@/types";
 import ProductCard from "./ProductCard";
 
 const ProductList = ({
@@ -5,7 +6,7 @@ const ProductList = ({
   title,
   limit,
 }: {
-  data: any;
+  data: Product[];
   title: string;
   limit?: string;
 }) => {
@@ -17,7 +18,7 @@ const ProductList = ({
     <div>
       <h2 className="h3-bold">{title}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
-        {limitedData.map((item: any) => (
+        {limitedData.map((item: Product) => (
           <ProductCard key={item.slug} product={item} />
         ))}
       </div>
