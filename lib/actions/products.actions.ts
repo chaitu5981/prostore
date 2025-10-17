@@ -19,7 +19,6 @@ const convertPrismaObjToJSObj = (p: PrismaProduct) => ({
 
 export const getProducts = async (): Promise<Product[]> => {
   const data = await prisma.product.findMany({
-    take: 4,
     orderBy: { createdAt: "desc" },
   });
   return data.map((p) => convertPrismaObjToJSObj(p));

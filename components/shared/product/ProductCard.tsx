@@ -11,8 +11,8 @@ import Link from "next/link";
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
-    <Card className="flex flex-col items-center cursor-pointer">
-      <Link href={`/product/${product.slug}`}>
+    <Link href={`/product/${product.slug}`}>
+      <Card className="flex flex-col items-center cursor-pointer">
         <CardHeader className="w-full justify-center">
           <Image
             src={product.images[0]}
@@ -30,8 +30,8 @@ const ProductCard = ({ product }: { product: Product }) => {
           <p>{product.rating} stars</p>
           <ProductPrice price={Number(product.price)} />
         </CardFooter>
-      </Link>
-    </Card>
+      </Card>
+    </Link>
   );
 };
 export default ProductCard;
