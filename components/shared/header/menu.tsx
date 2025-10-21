@@ -15,7 +15,7 @@ const menuItems = (
       </Link>
     </Button>
     <Button asChild>
-      <Link href="/">
+      <Link href="/sign-in">
         <UserIcon />
         Sign In
       </Link>

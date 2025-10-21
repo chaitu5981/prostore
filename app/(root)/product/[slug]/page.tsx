@@ -2,7 +2,6 @@ import ProductImages from "@/components/shared/product/ProductImages";
 import ProductPrice from "@/components/shared/product/ProductPrice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { getProductBySlug } from "@/lib/actions/products.actions";
 import { notFound } from "next/navigation";
 

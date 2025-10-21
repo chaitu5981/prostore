@@ -1,8 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCartIcon, UserIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ModeToggle from "./mode-toggle";
 import Menu from "./menu";
 
 const Header = () => {
