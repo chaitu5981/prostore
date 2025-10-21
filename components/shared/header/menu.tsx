@@ -4,6 +4,7 @@ import Link from "next/link";
 import { EllipsisVertical, ShoppingCartIcon, UserIcon } from "lucide-react";
 import { Sheet, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
 import { SheetContent, SheetTitle } from "@/components/ui/sheet";
+import UserButton from "./user-button";
 
 const menuItems = (
   <>
@@ -14,12 +15,7 @@ const menuItems = (
         Cart
       </Link>
     </Button>
-    <Button asChild>
-      <Link href="/sign-in">
-        <UserIcon />
-        Sign In
-      </Link>
-    </Button>
+    <UserButton />
   </>
 );
 const Menu = () => {

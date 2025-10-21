@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import SignInForm from "@/components/sign-in-form";
+import SignUpForm from "@/components/sign-up-form";
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-const SignInPage = async () => {
+const SignUpPage = async () => {
   const session = await auth();
   if (session) redirect("/");
   return (
@@ -25,18 +25,18 @@ const SignInPage = async () => {
           height={70}
           priority
         />
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>Sign in to your account</CardDescription>
+        <CardTitle>Create Account</CardTitle>
+        <CardDescription>Enter your details to Sign Up</CardDescription>
       </CardHeader>
       <CardContent className="w-full">
-        <SignInForm />
+        <SignUpForm />
       </CardContent>
       <CardFooter>
         <p className="text-sm">
-          Don&apos;t have an account?
+          Already have an account?
           <span>
-            <Link href={"/sign-up"} className="underline">
-              {"  "}Sign Up
+            <Link href={"/sign-in"} className="underline">
+              {"  "}Sign In
             </Link>
           </span>
         </p>
@@ -44,4 +44,4 @@ const SignInPage = async () => {
     </Card>
   );
 };
-export default SignInPage;
+export default SignUpPage;

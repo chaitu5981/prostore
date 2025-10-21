@@ -1,4 +1,4 @@
-import z, { email } from "zod";
+import { z } from "zod";
 import { formatDecimal } from "./utils";
 
 const currency = z
@@ -25,3 +25,17 @@ export const signInSchema = z.object({
   email: z.email("Email is invalid"),
   password: z.string().min(6, "Password should be at least 6 characters"),
 });
+
+export const signUpSchema = z
+  .object({
+    name: z.string().min(3, "Name should have at least 3 characters"),
+    email: z.email("Email is invalid"),
+    password: z.string().min(6, "Password should be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm Password should be at least 6 characters"),
+  })
+  .refine((data) => data.password == data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
