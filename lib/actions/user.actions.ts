@@ -52,8 +52,6 @@ export const signUpUser = async (formData: FormData) => {
       message: "Account created successfully",
     };
   } catch (error) {
-    console.log(error.name);
-    console.log(error.meta);
     if (isRedirectError(error)) {
       throw error;
     }
