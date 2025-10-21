@@ -8,3 +8,19 @@ export type Product = z.infer<typeof insertProductSchema> & {
   numReviews: number;
   createdAt: Date;
 };
+
+export type ZodError = {
+  name: string;
+  issues: Array<{ message: string }>;
+};
+
+export type PrismaError = {
+  name: string;
+  meta: {
+    target: Array<string>;
+  };
+};
+
+export type GenericError = {
+  message: string;
+};
