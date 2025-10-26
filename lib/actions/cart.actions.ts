@@ -89,7 +89,7 @@ const getCart = async (): Promise<Cart | undefined> => {
   if (!cart) return undefined;
   return {
     ...JSON.parse(JSON.stringify(cart)),
-    createdAt: new Date(cart?.createdAt!),
-    updatedAt: new Date(cart?.updatedAt!),
+    createdAt: new Date(cart?.createdAt),
+    updatedAt: new Date(cart?.updatedAt),
   };
 };
