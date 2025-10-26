@@ -9,9 +9,20 @@ generator client {
   output   = "../generated/prisma"
 }
 
+// generator accelerate {
+//   provider = "prisma-accelerate"
+//   output   = "../generated/prisma/edge"
+// }
+
+// generator edge {
+//   provider = "prisma-client-js"
+//   output   = "../generated/prisma/edge"
+// }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Product {
@@ -43,6 +54,7 @@ model User {
   paymentMethod String?
   accounts      Account[]
   sessions      Session[]
+  cart          Cart?
 
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
@@ -85,4 +97,18 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model Cart {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String?  @unique @db.Uuid
+  cartSessionId String
+  items         Json[]   @default([]) @db.Json
+  itemsPrice    Decimal  @db.Decimal(6, 2)
+  totalPrice    Decimal  @db.Decimal(6, 2)
+  shippingPrice Decimal  @db.Decimal(6, 2)
+  taxPrice      Decimal  @db.Decimal(6, 2)
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime @updatedAt
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

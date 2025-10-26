@@ -1,6 +1,4 @@
-import { PrismaClient } from "@/generated/prisma";
-// import { neon } from "@neondatabase/serverless";
-// import { PrismaNeonHTTP } from "@prisma/adapter-neon";
+import { PrismaClient } from "@/generated/prisma/edge";
 
 const globalForPrisma = global as unknown as {
   prisma?: PrismaClient;

@@ -37,3 +37,8 @@ export const formatError = (error: ErrorType): string => {
     return genericError.message;
   } else return JSON.stringify(error);
 };
+
+export const round2 = (value: number | string): number => {
+  const roundedValue = Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+  return roundedValue;
+};

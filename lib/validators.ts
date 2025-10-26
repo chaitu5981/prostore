@@ -1,12 +1,10 @@
 import { z } from "zod";
 import { formatDecimal } from "./utils";
 
-const currency = z
-  .string()
-  .refine(
-    (value) => /^\d+(\.\d{2})?$/.test(formatDecimal(Number(value))),
-    "Price should have 2 decimal places"
-  );
+const currency = z.string().refine((value) => {
+  console.log(value);
+  return /^\d+(\.\d{2})?$/.test(formatDecimal(Number(value)));
+}, "Price should have 2 decimal places");
 
 export const insertProductSchema = z.object({
   name: z.string().min(3, "Name should have at least 3 characters"),
@@ -39,3 +37,24 @@ export const signUpSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, "Product Id is required"),
+  productName: z.string().min(1, "Product Name is required"),
+  slug: z.string().min(1, "Product slug is required"),
+  qty: z
+    .number("Quantity should be a number")
+    .nonnegative("Quantity has to be a positive number"),
+  image: z.string().min(1, "Product Image is required"),
+  price: currency,
+});
+
+export const insertCartSchema = z.object({
+  userId: z.string().optional().nullable(),
+  cartSessionId: z.string().min(1, "cartSessionId is required"),
+  items: z.array(cartItemSchema),
+  itemsPrice: currency,
+  totalPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+});

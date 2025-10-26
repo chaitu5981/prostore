@@ -16,6 +16,7 @@ type sessionUser = {
   name?: string | null;
   email?: string | null;
   id?: string;
+  role?: string;
 };
 const UserButtonClient = ({
   sessionUser,
@@ -23,7 +24,6 @@ const UserButtonClient = ({
   sessionUser: sessionUser | undefined;
 }) => {
   const [signingOut, setSigningOut] = useState(false);
-  console.log("Session User", sessionUser);
   if (signingOut) return <Loader />;
   if (!sessionUser)
     return (
