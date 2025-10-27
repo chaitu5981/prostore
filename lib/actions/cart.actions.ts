@@ -81,7 +81,7 @@ export const addItemToCart = async (item: CartItem) => {
         data: { ...cart, ...calcPrices(cart.items) },
       });
     }
-    revalidatePath(`/product/${product.slug}`);
+    // revalidatePath(`/product/${product.slug}`);
     return {
       success: true,
       message: `${item.productName} added to Cart`,
@@ -113,6 +113,12 @@ export const removeItemFromCart = async (productId: string) => {
     if (!existItem) throw new Error("Item not found");
     if (existItem.qty == 1) {
       cart.items = cart.items.filter((item) => item.productId != productId);
+      if (cart.items.length == 0)
+        await prisma.cart.delete({
+          where: {
+            id: cart.id,
+          },
+        });
     } else {
       existItem.qty--;
       cart.items = cart.items.map((item) =>
@@ -128,7 +134,7 @@ export const removeItemFromCart = async (productId: string) => {
         ...calcPrices(cart.items),
       },
     });
-    revalidatePath(`/product/${product.slug}`);
+    // revalidatePath(`/product/${product.slug}`);
 
     return {
       success: true,

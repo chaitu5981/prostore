@@ -5,20 +5,29 @@ import { EllipsisVertical, ShoppingCartIcon, UserIcon } from "lucide-react";
 import { Sheet, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
 import { SheetContent, SheetTitle } from "@/components/ui/sheet";
 import UserButton from "./user-button";
+import { Badge } from "@/components/ui/badge";
+import { getCart } from "@/lib/actions/cart.actions";
+import { getCartQty } from "@/lib/utils";
 
-const menuItems = (
-  <>
-    <ModeToggle />
-    <Button asChild variant={"ghost"}>
-      <Link href="/">
-        <ShoppingCartIcon />
-        Cart
-      </Link>
-    </Button>
-    <UserButton />
-  </>
-);
-const Menu = () => {
+const Menu = async () => {
+  const cart = await getCart();
+  const menuItems = (
+    <>
+      <ModeToggle />
+      <Button asChild variant={"ghost"}>
+        <Link href="/cart">
+          <div className="relative">
+            <ShoppingCartIcon />
+            <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums absolute bg-blue-500 -right-3 -top-3">
+              {cart ? cart.items && getCartQty(cart?.items) : 0}
+            </Badge>
+          </div>
+          Cart
+        </Link>
+      </Button>
+      <UserButton />
+    </>
+  );
   return (
     <div>
       <div className="items-center gap-2 hidden md:flex">{menuItems}</div>

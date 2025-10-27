@@ -6,21 +6,27 @@ import { Cart, CartItem } from "@/types";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-
+import { usePathname, useRouter } from "next/navigation";
 const AddToCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
   const [adding, setAdding] = useState(false);
   const [removing, setRemoving] = useState(false);
   const existItem = cart?.items.find((x) => x.productId == item.productId);
+  const router = useRouter();
+  const pathName = usePathname();
   const handleAddToCart = async () => {
     try {
       setAdding(true);
       const res = await addItemToCart(item);
       if (!res.success) toast.error(res.message);
-      else
-        toast.success(res.message, {
-          action: <Button>Go to Cart</Button>,
-          position: "bottom-right",
-        });
+      else {
+        if (pathName == "/cart") toast.success(res.message);
+        else
+          toast.success(res.message, {
+            action: (
+              <Button onClick={() => router.push("/cart")}>Go to Cart</Button>
+            ),
+          });
+      }
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -42,11 +48,15 @@ const AddToCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
   if (existItem)
     return (
       <div className="flex-center gap-2">
-        <Button onClick={handleRemoveFromCart} className="w-12">
+        <Button
+          onClick={handleRemoveFromCart}
+          className="w-12"
+          variant="outline"
+        >
           {removing ? <Loader size={15} /> : <Minus />}
         </Button>
         {existItem.qty}
-        <Button onClick={handleAddToCart} className="w-12">
+        <Button onClick={handleAddToCart} className="w-12" variant="outline">
           {adding ? <Loader size={15} /> : <Plus />}
         </Button>
       </div>

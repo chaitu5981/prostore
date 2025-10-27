@@ -1,4 +1,4 @@
-import { GenericError, PrismaError, ZodError } from "@/types";
+import { CartItem, GenericError, PrismaError, ZodError } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 type ErrorType = ZodError | PrismaError | GenericError | Error | unknown;
@@ -42,3 +42,13 @@ export const round2 = (value: number | string): number => {
   const roundedValue = Math.round((Number(value) + Number.EPSILON) * 100) / 100;
   return roundedValue;
 };
+
+export const getCartQty = (items: CartItem[]): number =>
+  items.reduce((acc, item) => acc + item.qty, 0);
+
+export const currencyFormatter = (value: string | number): string =>
+  new Intl.NumberFormat("en-US", {
+    currency: "USD",
+    style: "currency",
+    maximumFractionDigits: 2,
+  }).format(Number(value));
