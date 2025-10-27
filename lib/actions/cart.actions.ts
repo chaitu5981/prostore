@@ -63,7 +63,7 @@ export const addItemToCart = async (item: CartItem) => {
         data: newCart,
       });
     } else {
-      let existItem = cart.items.find(
+      const existItem = cart.items.find(
         (item) => item.productId == cartItem.productId
       ) as CartItem;
       if (existItem) {
@@ -109,7 +109,7 @@ export const removeItemFromCart = async (productId: string) => {
     if (!product) throw new Error("Product not found");
     const cart = await getCart();
     if (!cart) throw new Error("Cart not found");
-    let existItem = cart.items.find((item) => item.productId == productId);
+    const existItem = cart.items.find((item) => item.productId == productId);
     if (!existItem) throw new Error("Item not found");
     if (existItem.qty == 1) {
       cart.items = cart.items.filter((item) => item.productId != productId);
