@@ -3,6 +3,7 @@ import ProductImages from "@/components/shared/product/ProductImages";
 import ProductPrice from "@/components/shared/product/ProductPrice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getCart } from "@/lib/actions/cart.actions";
 import { getProductBySlug } from "@/lib/actions/products.actions";
 import { notFound } from "next/navigation";
 
@@ -13,6 +14,8 @@ const ProductDetails = async ({
 }) => {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
+  const cart = await getCart();
+
   if (!product) notFound();
   return (
     <div className="wrapper">
@@ -52,6 +55,7 @@ const ProductDetails = async ({
             </div>
             {product.stock > 0 && (
               <AddToCart
+                cart={cart}
                 item={{
                   productId: product.id,
                   slug: product.slug,

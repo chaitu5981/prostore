@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "./auth";
 import { prisma } from "./lib/prisma";
 import { InputJsonValue } from "./generated/prisma/runtime/library";
+import { Prisma } from "./generated/prisma";
 export const runtime = "nodejs";
 export default auth(async (request) => {
   if (Math.random() < 0.2) {
@@ -40,7 +41,7 @@ export default auth(async (request) => {
           id: cart.id,
         },
         data: {
-          items: cart.items as InputJsonValue[],
+          items: cart.items as Prisma.CartUpdateitemsInput[],
         },
       });
     const response = NextResponse.next();
