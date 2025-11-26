@@ -16,6 +16,7 @@ import { currencyFormatter, getCartQty } from "@/lib/utils";
 import { Button } from "../ui/button";
 
 const CartTable = ({ cart }: { cart: Cart }) => {
+  const router = useRouter();
   return (
     <div className="flex justify-between flex-col md:flex-row gap-5">
       <Table className="w-full md:w-[70%] overflow-x-auto">
@@ -43,7 +44,7 @@ const CartTable = ({ cart }: { cart: Cart }) => {
           ))}
         </TableBody>
       </Table>
-      <Card className="w-[50%] md:w-[25%]">
+      <Card className="w-[40%] md:w-[25%] mx-auto md:ml-auto">
         <CardContent>
           <p>
             Sub Total({getCartQty(cart.items)}) :{" "}
@@ -53,8 +54,11 @@ const CartTable = ({ cart }: { cart: Cart }) => {
           </p>
         </CardContent>
         <CardFooter>
-          <Button className="whitespace-pre-wrap wrap-break-word">
-            Proceed to Checkout
+          <Button
+            className="w-full h-fit"
+            onClick={() => router.push("/shipping-address")}
+          >
+            <p className="whitespace-pre-wrap">Proceed to Checkout</p>
           </Button>
         </CardFooter>
       </Card>

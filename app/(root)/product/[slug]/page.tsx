@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { getCart } from "@/lib/actions/cart.actions";
 import { getProductBySlug } from "@/lib/actions/products.actions";
 import { notFound } from "next/navigation";
-
+export const metadata = {
+  title: "Product",
+};
 const ProductDetails = async ({
   params,
 }: {

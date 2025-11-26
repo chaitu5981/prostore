@@ -21,7 +21,7 @@ export const insertProductSchema = z.object({
 
 export const signInSchema = z.object({
   email: z.email("Email is invalid"),
-  password: z.string().min(6, "Password should be at least 6 characters"),
+  password: z.string().min(6, "Password should have at least 6 characters"),
 });
 
 export const signUpSchema = z
@@ -57,4 +57,16 @@ export const insertCartSchema = z.object({
   totalPrice: currency,
   shippingPrice: currency,
   taxPrice: currency,
+});
+
+export const shippingAddressSchema = z.object({
+  fullName: z.string().min(3, "Full Name should have at least 3 characters"),
+  streetAddress: z
+    .string()
+    .min(3, "Street Address should have at least 3 characters"),
+  city: z.string().min(3, "City should have at least 3 characters"),
+  postalCode: z
+    .string()
+    .min(3, "Postal Code should have at least 3 characters"),
+  country: z.string().min(3, "Country should have at least 3 characters"),
 });

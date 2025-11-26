@@ -2,6 +2,7 @@ import {
   cartItemSchema,
   insertCartSchema,
   insertProductSchema,
+  shippingAddressSchema,
 } from "@/lib/validators";
 import z from "zod";
 
@@ -35,3 +36,5 @@ export type PrismaError = {
 export type GenericError = {
   message: string;
 };
+
+export type ShippingAddress = z.infer<typeof shippingAddressSchema>;
