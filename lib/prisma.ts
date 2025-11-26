@@ -6,9 +6,12 @@ const globalForPrisma = global as unknown as {
   prisma?: PrismaClient;
 };
 
-const sql = neon(process.env.DATABASE_URL!);
+const sql = process.env.DATABASE_URL;
+if (!sql) {
+  throw new Error("DATABASE_URL is not set");
+}
 const adapter = new PrismaNeonHTTP(
-  sql.toString(),
+  sql,
   {} satisfies HTTPQueryOptions<boolean, boolean>
 );
 let prisma: PrismaClient;
