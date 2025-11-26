@@ -5,7 +5,7 @@ import { InputJsonValue } from "./generated/prisma/runtime/library";
 import { Prisma } from "./generated/prisma";
 export const runtime = "nodejs";
 export default auth(async (request) => {
-  if (Math.random() < 0.2) {
+  if (Math.random() < 0.1) {
     const thresholdTime = new Date(Date.now() - 60 * 1000);
     await prisma.cart.deleteMany({
       where: {
