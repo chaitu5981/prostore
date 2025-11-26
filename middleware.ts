@@ -29,32 +29,32 @@ export default auth(async (request) => {
     });
     return response;
   } else {
-    const cart = await prisma.cart.findFirst({
-      where: {
-        cartSessionId: cartSessionIdCookie.value,
-        userId: null,
-      },
-    });
-    if (cart && cart.items)
-      // await prisma.cart.update({
-      //   where: {
-      //     id: cart.id,
-      //   },
-      //   data: {
-      //     items: cart.items as Prisma.CartUpdateitemsInput[],
-      //   },
-      // });
-      // const response = NextResponse.next();
-      response.cookies.set(
-        "cartSessionId",
-        cartSessionIdCookie?.value as string,
-        {
-          httpOnly: true,
-          secure: process.env.NODE_ENV == "production",
-          sameSite: "lax",
-          maxAge: 60,
-        }
-      );
+    // const cart = await prisma.cart.findFirst({
+    //   where: {
+    //     cartSessionId: cartSessionIdCookie.value,
+    //     userId: null,
+    //   },
+    // });
+    // if (cart && cart.items)
+    // await prisma.cart.update({
+    //   where: {
+    //     id: cart.id,
+    //   },
+    //   data: {
+    //     items: cart.items as Prisma.CartUpdateitemsInput[],
+    //   },
+    // });
+    // const response = NextResponse.next();
+    response.cookies.set(
+      "cartSessionId",
+      cartSessionIdCookie?.value as string,
+      {
+        httpOnly: true,
+        secure: process.env.NODE_ENV == "production",
+        sameSite: "lax",
+        maxAge: 60,
+      }
+    );
     return response;
   }
 });
