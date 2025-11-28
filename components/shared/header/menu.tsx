@@ -8,9 +8,20 @@ import UserButton from "./user-button";
 import { Badge } from "@/components/ui/badge";
 import { getCart } from "@/lib/actions/cart.actions";
 import { getCartQty } from "@/lib/utils";
+import { Suspense } from "react";
+import Loader from "@/components/Loader";
+import UserButtonWrapper from "./user-button-wrapper";
+
+const CartBadge = async () => {
+  const cart = await getCart();
+  return (
+    <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums absolute bg-blue-500 -right-3 -top-3">
+      {cart ? cart.items && getCartQty(cart?.items) : 0}
+    </Badge>
+  );
+};
 
 const Menu = async () => {
-  const cart = await getCart();
   const menuItems = (
     <>
       <ModeToggle />
@@ -18,14 +29,14 @@ const Menu = async () => {
         <Link href="/cart">
           <div className="relative">
             <ShoppingCartIcon />
-            <Badge className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums absolute bg-blue-500 -right-3 -top-3">
-              {cart ? cart.items && getCartQty(cart?.items) : 0}
-            </Badge>
+            <Suspense fallback={<Loader size={10} />}>
+              <CartBadge />
+            </Suspense>
           </div>
           Cart
         </Link>
       </Button>
-      <UserButton />
+      <UserButtonWrapper />
     </>
   );
   return (
