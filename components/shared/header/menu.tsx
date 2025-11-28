@@ -21,7 +21,7 @@ const CartBadge = async () => {
   );
 };
 
-const Menu = async () => {
+const Menu = () => {
   const menuItems = (
     <>
       <ModeToggle />
