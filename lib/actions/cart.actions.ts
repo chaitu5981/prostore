@@ -2,35 +2,39 @@
 
 import { Cart, CartItem } from "@/types";
 import { cookies } from "next/headers";
-import { formatError, round2 } from "../utils";
+import { calcPrices, formatError, round2 } from "../utils";
 import { auth } from "@/auth";
 import { prisma } from "../prisma";
 import { cartItemSchema, insertCartSchema } from "../validators";
 import { revalidatePath } from "next/cache";
 
-const calcPrices = (cartItems: CartItem[]) => {
-  const itemsPrice = round2(
-    cartItems.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
-  );
-  const shippingPrice = round2(itemsPrice < 100 ? 10 : 0);
-  const taxPrice = round2(0.15 * itemsPrice);
-  const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
-  return {
-    itemsPrice: itemsPrice.toFixed(2),
-    shippingPrice: shippingPrice.toFixed(2),
-    taxPrice: taxPrice.toFixed(2),
-    totalPrice: totalPrice.toFixed(2),
-  };
+const removeStaleCarts = async () => {
+  const thresholdTime = new Date(Date.now() - 60 * 60 * 1000);
+  await prisma.cart.deleteMany({
+    where: {
+      userId: null,
+      updatedAt: { lt: thresholdTime },
+    },
+  });
+};
+
+const touchCart = async (cartId: string) => {
+  await prisma.cart.update({
+    where: { id: cartId },
+    data: {},
+  });
 };
 
 export const getCart = async (): Promise<Cart | undefined> => {
+  await removeStaleCarts();
   const cartSessionId = (await cookies()).get("cartSessionId")?.value;
   const session = await auth();
   const userId = session?.user?.id || undefined;
   const cart = await prisma.cart.findFirst({
-    where: userId ? { userId } : { cartSessionId },
+    where: userId ? { userId } : { cartSessionId, userId: null },
   });
   if (!cart) return undefined;
+  await touchCart(cart.id);
   return {
     ...JSON.parse(JSON.stringify(cart)),
     createdAt: new Date(cart?.createdAt),
@@ -74,7 +78,6 @@ export const addItemToCart = async (item: CartItem) => {
           item.productId == existItem.productId ? existItem : item
         );
       } else cart.items = [...cart.items, cartItem];
-      console.log(cart.items);
 
       await prisma.cart.update({
         where: { id: cart.id },

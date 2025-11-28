@@ -15,9 +15,14 @@ import { redirect } from "next/navigation";
 export const metadata: Metadata = {
   title: "Sign-In",
 };
-const SignInPage = async () => {
+const SignInPage = async (props: {
+  searchParams: Promise<{
+    callbackUrl: string;
+  }>;
+}) => {
+  const { callbackUrl } = await props.searchParams;
   const session = await auth();
-  if (session) redirect("/");
+  if (session) redirect(callbackUrl || "/");
   return (
     <Card className="w-full max-w-md flex-center">
       <CardHeader className="w-full  flex-col-center gap-4">

@@ -12,9 +12,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-const SignUpPage = async () => {
+const SignUpPage = async (props: {
+  searchParams: Promise<{
+    callbackUrl: string;
+  }>;
+}) => {
+  const { callbackUrl } = await props.searchParams;
   const session = await auth();
-  if (session) redirect("/");
+  if (session) redirect(callbackUrl || "/");
   return (
     <Card className="w-full max-w-md flex-center">
       <CardHeader className="w-full  flex-col-center gap-4">

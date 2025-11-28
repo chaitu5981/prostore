@@ -15,7 +15,6 @@ const SignInForm = () => {
       setLoading(true);
       const formData = new FormData(e.currentTarget);
       const res = await signInWithCredentials(formData);
-      console.log(res);
       if (res.success) toast.success(res.message);
       else toast.error(res.message);
     } catch (e) {

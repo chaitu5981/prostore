@@ -10,7 +10,6 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { prisma } from "../prisma";
 import { hashSync } from "bcrypt-ts-edge";
 import { formatError } from "../utils";
-import { success } from "zod";
 import { ShippingAddress } from "@/types";
 
 export const signInWithCredentials = async (formData: FormData) => {

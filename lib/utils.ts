@@ -52,3 +52,18 @@ export const currencyFormatter = (value: string | number): string =>
     style: "currency",
     maximumFractionDigits: 2,
   }).format(Number(value));
+
+export const calcPrices = (cartItems: CartItem[]) => {
+  const itemsPrice = round2(
+    cartItems.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
+  );
+  const shippingPrice = round2(itemsPrice < 100 ? 10 : 0);
+  const taxPrice = round2(0.15 * itemsPrice);
+  const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
+  return {
+    itemsPrice: itemsPrice.toFixed(2),
+    shippingPrice: shippingPrice.toFixed(2),
+    taxPrice: taxPrice.toFixed(2),
+    totalPrice: totalPrice.toFixed(2),
+  };
+};
