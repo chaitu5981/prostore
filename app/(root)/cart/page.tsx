@@ -1,11 +1,14 @@
 import CartTable from "@/components/cart/cart-table";
+import Loader from "@/components/Loader";
 import { getCart } from "@/lib/actions/cart.actions";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 export const metadata = {
   title: "Cart",
 };
-const CartPage = async () => {
+
+const CartContent = async () => {
   const cart = await getCart();
   if (!cart)
     return (
@@ -23,4 +26,13 @@ const CartPage = async () => {
     </div>
   );
 };
+
+const CartPage = () => {
+  return (
+    <Suspense fallback={<Loader size={50} />}>
+      <CartContent />
+    </Suspense>
+  );
+};
+
 export default CartPage;
