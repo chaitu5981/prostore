@@ -5,24 +5,12 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "../generated/prisma"
 }
 
-// generator accelerate {
-//   provider = "prisma-accelerate"
-//   output   = "../generated/prisma/edge"
-// }
-
-// generator edge {
-//   provider = "prisma-client-js"
-//   output   = "../generated/prisma/edge"
-// }
-
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")
 }
 
 model Product {

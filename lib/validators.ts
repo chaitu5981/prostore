@@ -98,9 +98,7 @@ export const insertOrderSchema = z.object({
   taxPrice: currency,
   totalPrice: currency,
   shippingAddress: shippingAddressSchema,
-  orderItems: z
-    .array(insertOrderItemSchema)
-    .min(1, "Order should have at least 1 item"),
+  
   paymentMethod: z.string().refine((data) => PAYMENT_METHODS.includes(data), {
     message: "Invalid Payment method",
   }),

@@ -54,4 +54,5 @@ export type Order = z.infer<typeof insertOrderSchema> & {
     name: string;
     email: string;
   };
+  orderItems : OrderItem[]
 };

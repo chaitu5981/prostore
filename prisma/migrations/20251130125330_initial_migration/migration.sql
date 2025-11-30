@@ -90,6 +90,39 @@ CREATE TABLE "Cart" (
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Order" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "itemsPrice" DECIMAL(6,2) NOT NULL,
+    "taxPrice" DECIMAL(6,2) NOT NULL,
+    "shippingPrice" DECIMAL(6,2) NOT NULL,
+    "totalPrice" DECIMAL(6,2) NOT NULL,
+    "shippingAddress" JSON NOT NULL,
+    "paymentMethod" TEXT NOT NULL,
+    "paymentResult" JSON,
+    "isPaid" BOOLEAN NOT NULL DEFAULT false,
+    "paidAt" TIMESTAMP(6),
+    "isDelivered" BOOLEAN NOT NULL DEFAULT false,
+    "deliveredAt" TIMESTAMP(6),
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "OrderItem" (
+    "productId" UUID NOT NULL,
+    "orderId" UUID NOT NULL,
+    "productName" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "qty" INTEGER NOT NULL,
+    "price" DECIMAL(6,2) NOT NULL,
+
+    CONSTRAINT "order_product_pk" PRIMARY KEY ("productId","orderId")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "product_slug_idx" ON "Product"("slug");
 
@@ -107,3 +140,12 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
