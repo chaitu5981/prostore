@@ -26,20 +26,24 @@ const touchCart = async (cartId: string) => {
 };
 
 export const getCart = async (): Promise<Cart | undefined> => {
-  await removeStaleCarts();
-  const cartSessionId = (await cookies()).get("cartSessionId")?.value;
-  const session = await auth();
-  const userId = session?.user?.id || undefined;
-  const cart = await prisma.cart.findFirst({
-    where: userId ? { userId } : { cartSessionId, userId: null },
-  });
-  if (!cart) return undefined;
-  await touchCart(cart.id);
-  return {
-    ...JSON.parse(JSON.stringify(cart)),
-    createdAt: new Date(cart?.createdAt),
-    updatedAt: new Date(cart?.updatedAt),
-  };
+  try {
+    await removeStaleCarts();
+    const cartSessionId = (await cookies()).get("cartSessionId")?.value;
+    const session = await auth();
+    const userId = session?.user?.id || undefined;
+    const cart = await prisma.cart.findFirst({
+      where: userId ? { userId } : { cartSessionId, userId: null },
+    });
+    if (!cart) return undefined;
+    await touchCart(cart.id);
+    return {
+      ...JSON.parse(JSON.stringify(cart)),
+      createdAt: new Date(cart?.createdAt),
+      updatedAt: new Date(cart?.updatedAt),
+    };
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const addItemToCart = async (item: CartItem) => {

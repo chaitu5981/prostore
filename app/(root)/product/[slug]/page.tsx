@@ -1,3 +1,4 @@
+import Loader from "@/components/Loader";
 import AddToCart from "@/components/shared/product/add-to-cart";
 import ProductImages from "@/components/shared/product/ProductImages";
 import ProductPrice from "@/components/shared/product/ProductPrice";
@@ -6,15 +7,11 @@ import { Button } from "@/components/ui/button";
 import { getCart } from "@/lib/actions/cart.actions";
 import { getProductBySlug } from "@/lib/actions/products.actions";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 export const metadata = {
   title: "Product",
 };
-const ProductDetails = async ({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) => {
-  const { slug } = await params;
+const ProductDetailsContent = async ({ slug }: { slug: string }) => {
   const product = await getProductBySlug(slug);
   const cart = await getCart();
 
@@ -74,4 +71,19 @@ const ProductDetails = async ({
     </div>
   );
 };
+
+const ProductDetails = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const { slug } = await params;
+
+  return (
+    <Suspense fallback={<Loader size={50} />}>
+      <ProductDetailsContent slug={slug} />
+    </Suspense>
+  );
+};
+
 export default ProductDetails;

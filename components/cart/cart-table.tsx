@@ -10,59 +10,50 @@ import {
 } from "../ui/table";
 import Image from "next/image";
 import AddToCart from "../shared/product/add-to-cart";
-import { useRouter } from "next/navigation";
-import { Card, CardContent, CardFooter } from "../ui/card";
-import { currencyFormatter, getCartQty } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
-const CartTable = ({ cart }: { cart: Cart }) => {
-  const router = useRouter();
+const CartTable = ({
+  cart,
+  src = "cartPage",
+}: {
+  cart: Cart;
+  src?: string;
+}) => {
   return (
-    <div className="flex justify-between flex-col md:flex-row gap-5">
-      <Table className="w-full md:w-[70%] overflow-x-auto">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[50%]">Item</TableHead>
-            <TableHead className="text-center">Quantity</TableHead>
-            <TableHead className="text-right">Price</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {cart.items.map((item) => (
-            <TableRow key={item.slug}>
-              <TableCell className="flex gap-3 items-center whitespace-break-spaces">
-                <Image src={item.image} alt="Image" width={50} height={50} />
-                <p className="wrap-break-word">{item.productName}</p>
-              </TableCell>
-              <TableCell>
+    <Table
+      className={cn(
+        "w-full overflow-x-auto",
+        src == "cartPage" ? "md:w-[70%]" : "w-full"
+      )}
+    >
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[50%]">Item</TableHead>
+          <TableHead className="text-center">Quantity</TableHead>
+          <TableHead className="text-right">Price</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {cart.items.map((item) => (
+          <TableRow key={item.slug}>
+            <TableCell className="flex gap-3 items-center whitespace-break-spaces">
+              <Image src={item.image} alt="Image" width={50} height={50} />
+              <p className="wrap-break-word">{item.productName}</p>
+            </TableCell>
+            <TableCell>
+              {src == "cartPage" ? (
                 <AddToCart item={item} cart={cart} />
-              </TableCell>
-              <TableCell>
-                <p className="text-right">${item.price}</p>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Card className="w-[40%] md:w-[25%] mx-auto md:ml-auto">
-        <CardContent>
-          <p>
-            Sub Total({getCartQty(cart.items)}) :{" "}
-            <span className="font-semibold">
-              {currencyFormatter(cart.totalPrice)}
-            </span>
-          </p>
-        </CardContent>
-        <CardFooter>
-          <Button
-            className="w-full h-fit"
-            onClick={() => router.push("/shipping-address")}
-          >
-            <p className="whitespace-pre-wrap">Proceed to Checkout</p>
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
+              ) : (
+                <p className="text-center">{item.qty}</p>
+              )}
+            </TableCell>
+            <TableCell>
+              <p className="text-right">${item.price}</p>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 export default CartTable;

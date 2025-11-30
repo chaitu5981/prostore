@@ -11,6 +11,7 @@ import { updateUserAddress } from "@/lib/actions/user.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Loader from "../Loader";
+import { MoveRight } from "lucide-react";
 const ShippingAddressForm = ({ address }: { address?: ShippingAddress }) => {
   const [isPending, startTransition] = useTransition();
   const form = useForm<ShippingAddress>({
@@ -34,7 +35,7 @@ const ShippingAddressForm = ({ address }: { address?: ShippingAddress }) => {
     });
   };
   return (
-    <div className="w-md">
+    <div className="max-w-md">
       <form onSubmit={form.handleSubmit(onSubmit)} className="full">
         <FieldGroup>
           <Controller
@@ -130,8 +131,15 @@ const ShippingAddressForm = ({ address }: { address?: ShippingAddress }) => {
             )}
           />
         </FieldGroup>
-        <Button type="submit" className="mt-5 w-20">
-          {isPending ? <Loader size={15} /> : "Continue"}
+        <Button type="submit" className="mt-5 w-30">
+          {isPending ? (
+            <Loader size={15} />
+          ) : (
+            <span className="flex gap-2 items-center">
+              <MoveRight />
+              Continue
+            </span>
+          )}
         </Button>
       </form>
     </div>

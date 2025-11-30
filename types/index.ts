@@ -1,7 +1,10 @@
 import {
   cartItemSchema,
   insertCartSchema,
+  insertOrderItemSchema,
+  insertOrderSchema,
   insertProductSchema,
+  paymentMethodSchema,
   shippingAddressSchema,
 } from "@/lib/validators";
 import z from "zod";
@@ -38,3 +41,17 @@ export type GenericError = {
 };
 
 export type ShippingAddress = z.infer<typeof shippingAddressSchema>;
+export type PaymentMethod = z.infer<typeof paymentMethodSchema>;
+export type OrderItem = z.infer<typeof insertOrderItemSchema>;
+export type Order = z.infer<typeof insertOrderSchema> & {
+  id: string;
+  isPaid: boolean;
+  isDelivered: boolean;
+  paidAt: Date | null;
+  deliveredAt: Date | null;
+  createdAt: Date;
+  user: {
+    name: string;
+    email: string;
+  };
+};
