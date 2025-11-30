@@ -4,7 +4,6 @@ import { prisma } from "./lib/prisma";
 import Credentials from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { Cart, CartItem } from "./types";
 import { calcPrices } from "./lib/utils";
 import { Prisma } from "./generated/prisma/client";
@@ -54,6 +53,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // console.log(token);
       if (user) token.role = user.role;
       if (trigger == "signIn" || trigger == "signUp") {
+        const { cookies } = await import("next/headers");
         const cartSessionId = (await cookies()).get("cartSessionId")?.value;
         if (cartSessionId) {
           const guestCart = await prisma.cart.findFirst({

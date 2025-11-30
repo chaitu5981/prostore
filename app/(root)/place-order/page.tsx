@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import CartTable from "@/components/cart/cart-table";
 import Loader from "@/components/Loader";
+import PlaceOrderForm from "@/components/place-order/place-order-form";
 import CheckoutSteps from "@/components/shared/checkout/checkout-steps";
 import { Button } from "@/components/ui/button";
 import {
@@ -101,7 +102,9 @@ const PlaceOrderContent = async () => {
                   <p>{currencyFormatter(cart.totalPrice)}</p>
                 </div>
               </CardContent>
-              <CardFooter></CardFooter>
+              <CardFooter>
+                <PlaceOrderForm />
+              </CardFooter>
             </Card>
           </div>
         </div>
