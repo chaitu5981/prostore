@@ -1,6 +1,6 @@
 import { Product } from "@/types";
 import { prisma } from "@/lib/prisma";
-import { Product as PrismaProduct } from "@/generated/prisma";
+import { Product as PrismaProduct } from "@/generated/prisma/client";
 const convertPrismaObjToJSObj = (p: PrismaProduct) => ({
   name: p.name,
   brand: p.brand,
