@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { Cart, CartItem } from "./types";
 import { calcPrices } from "./lib/utils";
-import { InputJsonValue, JsonValue } from "./generated/prisma/runtime/library";
+import { Prisma } from "./generated/prisma/client";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.AUTH_SECRET,
   debug: true,
@@ -108,7 +108,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                   id: existingCart.id,
                 },
                 data: {
-                  items: existingCart.items as InputJsonValue[],
+                  items: existingCart.items as Prisma.InputJsonValue[],
                   ...calcPrices(existingCart.items as CartItem[]),
                 },
               });
@@ -117,7 +117,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 data: {
                   cartSessionId: guestCart.cartSessionId,
                   userId: token.sub,
-                  items: guestCart.items as InputJsonValue[],
+                  items: guestCart.items as Prisma.InputJsonValue[],
                   itemsPrice: guestCart.itemsPrice,
                   totalPrice: guestCart.totalPrice,
                   taxPrice: guestCart.taxPrice,
