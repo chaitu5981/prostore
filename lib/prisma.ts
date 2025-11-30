@@ -1,6 +1,6 @@
 import { PrismaClient } from "@/generated/prisma/client";
 import { neon, type HTTPQueryOptions } from "@neondatabase/serverless";
-import { PrismaNeonHTTP } from "@prisma/adapter-neon";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaPg } from "@prisma/adapter-pg";
 const globalForPrisma = global as unknown as {
   prisma?: PrismaClient;
@@ -11,10 +11,7 @@ if (!connString) {
 }
 const adapter =
   process.env.NODE_ENV === "production"
-    ? new PrismaNeonHTTP(
-        connString,
-        {} satisfies HTTPQueryOptions<boolean, boolean>
-      )
+    ? new PrismaNeon({ connectionString: connString })
     : new PrismaPg({ connectionString: connString });
 let prisma: PrismaClient;
 if (process.env.NODE_ENV == "development")
