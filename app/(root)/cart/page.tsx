@@ -25,27 +25,24 @@ const CartContent = async () => {
     <div className="wrapper">
       <div className="h3-bold">Shopping Cart</div>
       <div className="flex justify-between flex-col md:flex-row gap-5">
-
-      <CartTable cart={cart} />
-      <Card className="w-[40%] md:w-[25%] mx-auto md:ml-auto">
-        <CardContent>
-          <p>
-            Sub Total({getCartQty(cart.items)}) :{" "}
-            <span className="font-semibold">
-              {currencyFormatter(cart.totalPrice)}
-            </span>
-          </p>
-        </CardContent>
-        <CardFooter>
-          <Link href="/shipping-address">
-          <Button
-            className="w-full h-fit"
-            >
-            <p className="whitespace-pre-wrap">Proceed to Checkout</p>
-          </Button>
+        <CartTable cart={cart} />
+        <Card className="w-[40%] md:w-[25%] mx-auto md:ml-auto">
+          <CardContent>
+            <p>
+              Sub Total({getCartQty(cart.items)}) :{" "}
+              <span className="font-semibold">
+                {currencyFormatter(cart.totalPrice)}
+              </span>
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Link href="/shipping-address">
+              <Button className="w-full h-fit">
+                <p className="whitespace-pre-wrap">Proceed to Checkout</p>
+              </Button>
             </Link>
-        </CardFooter>
-      </Card>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );

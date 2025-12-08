@@ -67,3 +67,5 @@ export const calcPrices = (cartItems: CartItem[]) => {
     totalPrice: totalPrice.toFixed(2),
   };
 };
+
+export const shortenId = (id: string) => "..." + id.substring(id.length - 6);

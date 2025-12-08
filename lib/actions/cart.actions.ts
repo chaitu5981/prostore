@@ -27,7 +27,7 @@ const touchCart = async (cartId: string) => {
 
 export const getCart = async (): Promise<Cart | undefined> => {
   try {
-    await removeStaleCarts();
+    // await removeStaleCarts();
     const cartSessionId = (await cookies()).get("cartSessionId")?.value;
     const session = await auth();
     const userId = session?.user?.id || undefined;

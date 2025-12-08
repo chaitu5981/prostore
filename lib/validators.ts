@@ -3,7 +3,6 @@ import { formatDecimal } from "./utils";
 import { PAYMENT_METHODS } from "./constants";
 
 const currency = z.string().refine((value) => {
-  console.log(value);
   return /^\d+(\.\d{2})?$/.test(formatDecimal(Number(value)));
 }, "Price should have 2 decimal places");
 
@@ -98,7 +97,6 @@ export const insertOrderSchema = z.object({
   taxPrice: currency,
   totalPrice: currency,
   shippingAddress: shippingAddressSchema,
-  
   paymentMethod: z.string().refine((data) => PAYMENT_METHODS.includes(data), {
     message: "Invalid Payment method",
   }),

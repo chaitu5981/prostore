@@ -34,7 +34,7 @@ const CartTable = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {cart.items.map((item) => (
+        {cart?.items.map((item) => (
           <TableRow key={item.slug}>
             <TableCell className="flex gap-3 items-center whitespace-break-spaces">
               <Image src={item.image} alt="Image" width={50} height={50} />

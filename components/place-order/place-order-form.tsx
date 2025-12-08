@@ -29,7 +29,7 @@ const PlaceOrderForm = () => {
         {isPending ? (
           <Loader size={10} />
         ) : (
-          <span className="flex gap-2">
+          <span className="flex gap-2 items-center">
             <Check />
             Place Order
           </span>

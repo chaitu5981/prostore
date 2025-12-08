@@ -8,6 +8,18 @@ import { insertOrderItemSchema, insertOrderSchema } from "../validators";
 import { prisma } from "../prisma";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
+export const getOrderById = async (orderId: string) => {
+  const order = await prisma.order.findFirst({
+    where: {
+      id: orderId,
+    },
+    include: {
+      orderItems: true,
+    },
+  });
+  return order;
+};
+
 export const createOrder = async () => {
   try {
     const session = await auth();
