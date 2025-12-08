@@ -14,4 +14,4 @@ if (process.env.NODE_ENV == "development")
 else prisma = new PrismaClient({ adapter });
 
 if (process.env.NODE_ENV == "development") globalForPrisma.prisma = prisma;
-export default prisma;
+export { prisma };
