@@ -4,7 +4,6 @@ import Link from "next/link";
 import { EllipsisVertical, ShoppingCartIcon, UserIcon } from "lucide-react";
 import { Sheet, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
 import { SheetContent, SheetTitle } from "@/components/ui/sheet";
-import UserButton from "./user-button";
 import { Badge } from "@/components/ui/badge";
 import { getCart } from "@/lib/actions/cart.actions";
 import { getCartQty } from "@/lib/utils";

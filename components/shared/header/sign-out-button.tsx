@@ -2,19 +2,28 @@
 import { Button } from "@/components/ui/button";
 import { signOutUser } from "@/lib/actions/user.actions";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 const SignOutButton = ({
-  setSigningOut,
+  setShowLoader,
 }: {
-  setSigningOut: (b: boolean) => void;
+  setShowLoader: (b: boolean) => void;
 }) => {
+  const [isPending, startTransition] = useTransition();
+  const [signingOut, setSigningOut] = useState(false);
+
+  const router = useRouter();
   const handleSignOut = async () => {
     try {
       setSigningOut(true);
       await signOutUser();
       toast.success("Signed out successfully");
-      //   router.refresh();
+      startTransition(() => {
+        router.refresh();
+      });
+      setShowLoader(isPending || signingOut);
     } catch (error) {
       console.log(error);
       if (isRedirectError(error)) {
@@ -22,7 +31,6 @@ const SignOutButton = ({
         throw error;
       }
       toast.error("Error in signing out");
-    } finally {
       setSigningOut(false);
     }
   };

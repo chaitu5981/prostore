@@ -16,7 +16,11 @@ const Header = () => {
           />
           <span className="h3-bold hidden lg:block">Prostore</span>
         </Link>
-        <Menu />
+        <div className="flex gap-2 items-center">
+          <Link href="/user/orders">Orders</Link>
+          <Link href="/user/profile">Profile</Link>
+          <Menu />
+        </div>
       </div>
     </div>
   );

@@ -23,8 +23,8 @@ const UserButtonClient = ({
 }: {
   sessionUser: sessionUser | undefined;
 }) => {
-  const [signingOut, setSigningOut] = useState(false);
-  if (signingOut) return <Loader />;
+  const [showLoader, setShowLoader] = useState(false);
+  if (showLoader) return <Loader />;
   if (!sessionUser)
     return (
       <Button asChild>
@@ -50,7 +50,7 @@ const UserButtonClient = ({
           <p className="text-gray-400 text-sm">{sessionUser?.email}</p>
         </DropdownMenuLabel>
         <DropdownMenuItem className="p-0">
-          <SignOutButton setSigningOut={setSigningOut} />
+          <SignOutButton setShowLoader={setShowLoader} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

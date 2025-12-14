@@ -1,8 +1,14 @@
 import { Suspense } from "react";
-import UserButton from "./user-button";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { UserIcon } from "lucide-react";
+import UserButtonClient from "./user-button-client";
+import { auth } from "@/auth";
+
+const UserButton = async () => {
+  const session = await auth();
+  return <UserButtonClient sessionUser={session?.user} />;
+};
 
 const UserButtonWrapper = () => {
   return (
