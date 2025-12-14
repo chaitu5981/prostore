@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
 import { Cart, CartItem } from "@/types";
 import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 const AddToCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
   const [adding, setAdding] = useState(false);
   const [removing, setRemoving] = useState(false);
+  const [isAdditionPending, startAddTransition] = useTransition();
+  const [isRemovalPending, startRemoveTransition] = useTransition();
   const existItem = cart?.items.find((x) => x.productId == item.productId);
   const router = useRouter();
   const pathName = usePathname();
@@ -26,7 +28,9 @@ const AddToCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
           ),
         });
     }
-    router.refresh();
+    startAddTransition(() => {
+      router.refresh();
+    });
     setAdding(false);
   };
   const handleRemoveFromCart = async () => {
@@ -34,7 +38,9 @@ const AddToCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
     const res = await removeItemFromCart(item.productId);
     if (res.success) toast.success(res.message);
     else toast.error(res.message);
-    router.refresh();
+    startRemoveTransition(() => {
+      router.refresh();
+    });
     setRemoving(false);
   };
   if (existItem)
@@ -45,11 +51,11 @@ const AddToCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
           className="w-12"
           variant="outline"
         >
-          {removing ? <Loader size={15} /> : <Minus />}
+          {removing || isRemovalPending ? <Loader size={15} /> : <Minus />}
         </Button>
         {existItem.qty}
         <Button onClick={handleAddToCart} className="w-12" variant="outline">
-          {adding ? <Loader size={15} /> : <Plus />}
+          {adding || isAdditionPending ? <Loader size={15} /> : <Plus />}
         </Button>
       </div>
     );
@@ -57,7 +63,7 @@ const AddToCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
     <div>
       {" "}
       <Button className="w-full" onClick={handleAddToCart}>
-        {adding ? (
+        {adding || isAdditionPending ? (
           <Loader size={20} />
         ) : (
           <div className="flex gap-2 items-center">
