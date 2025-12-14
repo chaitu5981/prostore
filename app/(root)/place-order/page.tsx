@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import CartTable from "@/components/cart/cart-table";
 import Loader from "@/components/Loader";
+import OrderTotal from "@/components/place-order/order-total";
 import PlaceOrderForm from "@/components/place-order/place-order-form";
 import CheckoutSteps from "@/components/shared/checkout/checkout-steps";
 import { Button } from "@/components/ui/button";

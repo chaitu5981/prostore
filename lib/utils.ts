@@ -69,3 +69,12 @@ export const calcPrices = (cartItems: CartItem[]) => {
 };
 
 export const shortenId = (id: string) => "..." + id.substring(id.length - 6);
+export const formatDateAndTime = (date: Date) =>
+  date.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });

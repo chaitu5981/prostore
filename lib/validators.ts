@@ -101,3 +101,10 @@ export const insertOrderSchema = z.object({
     message: "Invalid Payment method",
   }),
 });
+
+export const paymentResultSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  pricePaid: z.string(),
+  emailAddress: z.string(),
+});

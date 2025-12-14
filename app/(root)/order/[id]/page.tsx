@@ -1,12 +1,22 @@
 import { auth } from "@/auth";
-import CartTable from "@/components/cart/cart-table";
 import Loader from "@/components/Loader";
+import PaypalOrderForm from "@/components/paypal-order/paypal-order-form";
+import OrderTotal from "@/components/place-order/order-total";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { getOrderById } from "@/lib/actions/order.actions";
-import { shortenId } from "@/lib/utils";
+import { formatDateAndTime, shortenId } from "@/lib/utils";
 import { ShippingAddress } from "@/types";
 import { Metadata } from "next";
+import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -23,7 +33,7 @@ const OrderContent = async ({ orderId }: { orderId: string }) => {
   return (
     <div className="wrapper">
       <p className="text-xl my-3">Order {shortenId(orderId)}</p>
-      <div className="flex">
+      <div className="flex gap-4">
         <div className="flex flex-col gap-2 w-full md:w-[65%]">
           <Card>
             <CardHeader>
@@ -31,8 +41,8 @@ const OrderContent = async ({ orderId }: { orderId: string }) => {
             </CardHeader>
             <CardContent>
               <p>{order.paymentMethod}</p>
-              {order.isPaid ? (
-                <Badge></Badge>
+              {order.isPaid && order.paidAt ? (
+                <Badge>Paid at {formatDateAndTime(order.paidAt as Date)}</Badge>
               ) : (
                 <Badge variant="destructive" className="mt-4">
                   Not Paid
@@ -62,8 +72,43 @@ const OrderContent = async ({ orderId }: { orderId: string }) => {
             <CardHeader>
               <CardTitle>Order Items</CardTitle>
             </CardHeader>
-            <CardContent></CardContent>
+            <CardContent>
+              <Table className="w-full overflow-x-auto">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[50%]">Item</TableHead>
+                    <TableHead className="text-center">Quantity</TableHead>
+                    <TableHead className="text-right">Price</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {order.orderItems &&
+                    order?.orderItems.map((item) => (
+                      <TableRow key={item.slug}>
+                        <TableCell className="flex gap-3 items-center whitespace-break-spaces">
+                          <Image
+                            src={item.image}
+                            alt="Image"
+                            width={50}
+                            height={50}
+                          />
+                          <p className="wrap-break-word">{item.productName}</p>
+                        </TableCell>
+                        <TableCell>
+                          <p className="text-center">{item.qty}</p>
+                        </TableCell>
+                        <TableCell>
+                          <p className="text-right">${item.price.toString()}</p>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </CardContent>
           </Card>
+        </div>
+        <div className="w-full md:w-[32%]">
+          <OrderTotal order={order} />
         </div>
       </div>
     </div>

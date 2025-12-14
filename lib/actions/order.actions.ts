@@ -1,12 +1,13 @@
 "use server";
 import { auth } from "@/auth";
-import { success } from "zod";
 import { formatError } from "../utils";
 import { getUserById } from "./user.actions";
 import { getCart } from "./cart.actions";
 import { insertOrderItemSchema, insertOrderSchema } from "../validators";
 import { prisma } from "../prisma";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { paypal } from "../paypal";
+import { PaymentResult, ShippingAddress } from "@/types";
 
 export const getOrderById = async (orderId: string) => {
   const order = await prisma.order.findFirst({
@@ -15,9 +16,28 @@ export const getOrderById = async (orderId: string) => {
     },
     include: {
       orderItems: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
     },
   });
-  return order;
+  if (!order || !order.shippingAddress) return null;
+  return {
+    ...order,
+    itemsPrice: order?.itemsPrice.toString(),
+    taxPrice: order?.taxPrice.toString(),
+    shippingPrice: order?.shippingPrice.toString(),
+    totalPrice: order?.totalPrice.toString(),
+    shippingAddress: order.shippingAddress as ShippingAddress,
+    paymentResult: order.paymentResult as PaymentResult,
+    orderItems: order.orderItems.map((orderItem) => ({
+      ...orderItem,
+      price: orderItem.price.toString(),
+    })),
+  };
 };
 
 export const createOrder = async () => {
@@ -62,7 +82,7 @@ export const createOrder = async () => {
           ...item,
           orderId: insertedOrder.id,
         });
-        const insertedOrderItem = await tx.orderItem.create({
+        await tx.orderItem.create({
           data: orderItem,
         });
       }
@@ -83,6 +103,134 @@ export const createOrder = async () => {
   } catch (error) {
     console.log(error);
     if (isRedirectError(error)) throw error;
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const createPaypalOrder = async (orderId: string, price: string) => {
+  try {
+    const res = await paypal.createOrder(price);
+    if (!res.id) throw new Error("Paypal Order could not be created");
+    await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        paymentResult: {
+          id: res.id,
+          status: "",
+          email: "",
+          pricePaid: 0,
+        },
+      },
+    });
+    return {
+      success: true,
+      orderID: res.id,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const approvePaypalOrder = async (orderId: string, orderID: string) => {
+  try {
+    const captureData = await paypal.captureOrder(orderID);
+    const order = await prisma.order.findFirst({
+      where: {
+        id: orderId,
+      },
+      include: {
+        orderItems: true,
+      },
+    });
+    if (!order) throw new Error("Order not found");
+    if (order?.isPaid) throw new Error("Oder is already paid");
+    if (
+      !captureData ||
+      captureData.status !== "COMPLETED" ||
+      captureData.id !== (order?.paymentResult as PaymentResult).id
+    )
+      throw new Error("Paypal payment failed");
+    await prisma.$transaction(async (tx) => {
+      const outOfStockItems: string[] = [];
+      for (const orderItem of order.orderItems) {
+        const product = await tx.product.findFirst({
+          where: {
+            id: orderItem.productId,
+          },
+          select: {
+            id: true,
+            name: true,
+            stock: true,
+          },
+        });
+        if (!product || !product.stock)
+          outOfStockItems.push(orderItem.productName);
+        else if (product?.stock < orderItem.qty)
+          outOfStockItems.push(orderItem.productName);
+        if (outOfStockItems.length > 0)
+          throw new Error(
+            `Products ${outOfStockItems.join(" ")} are out of stock`
+          );
+      }
+
+      order?.orderItems.forEach(async (orderItem) => {
+        await tx.product.update({
+          where: {
+            id: orderItem.productId,
+          },
+          data: {
+            stock: {
+              increment: -orderItem.qty,
+            },
+          },
+        });
+      });
+      await tx.order.update({
+        where: {
+          id: orderId,
+        },
+        data: {
+          isPaid: true,
+          paidAt: new Date(),
+          paymentResult: {
+            id: captureData.id,
+            status: captureData.status,
+            email: captureData.payment_source.paypal.email_address,
+            pricePaid:
+              captureData.purchase_units[0].payments.captures[0].amount.value,
+          },
+        },
+      });
+    });
+    const updatedOrder = await prisma.order.findFirst({
+      where: {
+        id: orderId,
+      },
+      include: {
+        orderItems: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+    if (!updatedOrder) throw new Error("Order not found");
+    return {
+      success: true,
+      message: "Paypal payment successful",
+    };
+  } catch (error) {
     return {
       success: false,
       message: formatError(error),
