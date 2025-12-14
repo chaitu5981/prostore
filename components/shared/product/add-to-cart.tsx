@@ -14,36 +14,28 @@ const AddToCart = ({ item, cart }: { item: CartItem; cart?: Cart }) => {
   const router = useRouter();
   const pathName = usePathname();
   const handleAddToCart = async () => {
-    try {
-      setAdding(true);
-      const res = await addItemToCart(item);
-      if (!res.success) toast.error(res.message);
-      else {
-        if (pathName == "/cart") toast.success(res.message);
-        else
-          toast.success(res.message, {
-            action: (
-              <Button onClick={() => router.push("/cart")}>Go to Cart</Button>
-            ),
-          });
-      }
-    } catch (error) {
-      toast.error("Something went wrong");
-    } finally {
-      setAdding(false);
+    setAdding(true);
+    const res = await addItemToCart(item);
+    if (!res.success) toast.error(res.message);
+    else {
+      if (pathName == "/cart") toast.success(res.message);
+      else
+        toast.success(res.message, {
+          action: (
+            <Button onClick={() => router.push("/cart")}>Go to Cart</Button>
+          ),
+        });
     }
+    router.refresh();
+    setAdding(false);
   };
   const handleRemoveFromCart = async () => {
-    try {
-      setRemoving(true);
-      const res = await removeItemFromCart(item.productId);
-      if (res.success) toast.success(res.message);
-      else toast.error(res.message);
-    } catch (error) {
-      toast.error("Something went wrong");
-    } finally {
-      setRemoving(false);
-    }
+    setRemoving(true);
+    const res = await removeItemFromCart(item.productId);
+    if (res.success) toast.success(res.message);
+    else toast.error(res.message);
+    router.refresh();
+    setRemoving(false);
   };
   if (existItem)
     return (
