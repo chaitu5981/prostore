@@ -24,7 +24,6 @@ const UserButtonClient = ({
   sessionUser: sessionUser | undefined;
 }) => {
   const [showLoader, setShowLoader] = useState(false);
-  if (showLoader) return <Loader />;
   if (!sessionUser)
     return (
       <Button asChild>
@@ -41,7 +40,11 @@ const UserButtonClient = ({
           variant="ghost"
           className="rounded-full bg-gray-400 hover:bg-gray-300 px-3"
         >
-          {sessionUser?.name?.slice(0, 1).toUpperCase() || "U"}
+          {showLoader ? (
+            <Loader size={20} />
+          ) : (
+            sessionUser?.name?.slice(0, 1).toUpperCase() || "U"
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
