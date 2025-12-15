@@ -16,8 +16,8 @@ const Pagination = ({ noOfPages }: { noOfPages: number }) => {
   const pathname = usePathname();
   const router = useRouter();
   const params = useSearchParams();
-  const page = params.get("page");
-  const limit = params.get("limit");
+  const page = params.get("page") || 1;
+  const limit = params.get("limit") || 3;
   return (
     <div className="flex-between">
       <div>
