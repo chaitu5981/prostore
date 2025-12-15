@@ -237,3 +237,38 @@ export const approvePaypalOrder = async (orderId: string, orderID: string) => {
     };
   }
 };
+
+export const getMyOrders = async ({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) => {
+  try {
+    const session = await auth();
+    if (!session) throw new Error("Not Authorized");
+    const user = session.user;
+    if (!user) throw new Error("User not found");
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: user.id,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    const orderCount = await prisma.order.count({
+      where: { userId: user.id },
+    });
+    return {
+      success: true,
+      data: orders,
+      noOfPages: Math.ceil(orderCount / limit),
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};

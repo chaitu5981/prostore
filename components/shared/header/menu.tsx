@@ -32,7 +32,7 @@ const Menu = () => {
               <CartBadge />
             </Suspense>
           </div>
-          Cart
+          <p>Cart</p>
         </Link>
       </Button>
       <UserButtonWrapper />

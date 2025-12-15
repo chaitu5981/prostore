@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Menu from "./menu";
+import NavLinks from "./nav-links";
 
 const Header = () => {
   return (
@@ -17,8 +18,7 @@ const Header = () => {
           <span className="h3-bold hidden lg:block">Prostore</span>
         </Link>
         <div className="flex gap-2 items-center">
-          <Link href="/user/orders">Orders</Link>
-          <Link href="/user/profile">Profile</Link>
+          <NavLinks />
           <Menu />
         </div>
       </div>
