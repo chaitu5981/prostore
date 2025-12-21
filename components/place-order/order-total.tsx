@@ -34,11 +34,13 @@ const OrderTotal = ({ order }: { order: Order }) => {
         </div>
       </CardContent>
       <CardFooter>
-        {order.isPaid || (
+        {!order.isPaid ? (
           <PaypalOrderForm
             price={order.totalPrice}
             orderId={order.id as string}
           />
+        ) : (
+          <></>
         )}
       </CardFooter>
     </Card>
