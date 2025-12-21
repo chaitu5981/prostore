@@ -137,3 +137,27 @@ export const updateUserPaymentMethod = async (data: PaymentMethod) => {
     };
   }
 };
+
+export const updateUserProfile = async (name: string) => {
+  try {
+    const session = await auth();
+    if (!session?.user) throw new Error("User not found");
+    await prisma.user.update({
+      where: {
+        id: session?.user.id,
+      },
+      data: {
+        name,
+      },
+    });
+    return {
+      success: true,
+      message: "User Profile updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};

@@ -272,3 +272,31 @@ export const getMyOrders = async ({
     };
   }
 };
+
+export const getOrderSummary = async () => {
+  try {
+    const productsCount = await prisma.product.count();
+    const customersCount = await prisma.user.count({
+      where: {
+        role: "user",
+      },
+    });
+    const ordersCount = await prisma.order.count();
+    const totalSales = await prisma.order.aggregate({
+      _sum: { itemsPrice: true },
+    });
+    console.log("Items price", totalSales);
+    return {
+      success: true,
+      revenue: totalSales || 0,
+      sales: ordersCount || 0,
+      customers: customersCount || 0,
+      products: productsCount || 0,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};

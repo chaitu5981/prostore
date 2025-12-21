@@ -1,9 +1,12 @@
+import { auth } from "@/auth";
 import Header from "@/components/shared/header";
 
-const HomeLayout = ({ children }: { children: React.ReactNode }) => {
+const HomeLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await auth();
+  const role = session?.user?.role || "undefined";
   return (
     <div>
-      <Header />
+      <Header role={role} />
       {children}
     </div>
   );

@@ -1,10 +1,8 @@
 import NextAuth from "next-auth";
 import { prisma } from "./lib/prisma";
-// import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import { compareSync } from "bcrypt-ts-edge";
-import { NextResponse } from "next/server";
-import { Cart, CartItem } from "./types";
+import { CartItem } from "./types";
 import { calcPrices } from "./lib/utils";
 import { Prisma } from "./generated/prisma/client";
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -46,12 +44,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session: async ({ session, user, token, trigger }) => {
       session.user.id = token.sub as string;
       session.user.role = token.role as string;
-      if (trigger == "update") session.user.name = user.name;
+      session.user.email = token.email as string;
+      session.user.name = token.name as string;
+      // if (trigger == "update") session.user.name = user.name;
       return session;
     },
-    jwt: async ({ token, user, trigger }) => {
-      // console.log(token);
-      if (user) token.role = user.role;
+    jwt: async ({ token, user, trigger, session }) => {
+      if (user) {
+        token.role = user.role;
+        token.email = user.email;
+      }
+      if (trigger == "update" && session.user.name)
+        token.name = session.user.name;
       if (trigger == "signIn" || trigger == "signUp") {
         const { cookies } = await import("next/headers");
         const cartSessionId = (await cookies()).get("cartSessionId")?.value;
