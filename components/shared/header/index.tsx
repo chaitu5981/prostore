@@ -4,7 +4,7 @@ import Menu from "./menu";
 import NavLinks from "./nav-links";
 import AdminNavLinks from "./admin-nav-links";
 
-const Header = ({ role }: { role: string }) => {
+const Header = ({ role }: { role?: string }) => {
   return (
     <div className="border-b-2 border-gray-300">
       <div className="flex-between wrapper">
