@@ -254,6 +254,13 @@ export const getMyOrders = async ({
       where: {
         userId: user.id,
       },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
       skip: (page - 1) * limit,
       take: limit,
     });
@@ -283,15 +290,91 @@ export const getOrderSummary = async () => {
     });
     const ordersCount = await prisma.order.count();
     const totalSales = await prisma.order.aggregate({
-      _sum: { itemsPrice: true },
+      _sum: { totalPrice: true },
     });
-    console.log("Items price", totalSales);
+    const salesByMonthRaw =
+      (await prisma.$queryRaw`SELECT to_char("createdAt",'MM/YY') as "month",sum("totalPrice") as "totalSales" FROM "Order" GROUP BY to_char("createdAt",'MM/YY')`) as Array<{
+        month: string;
+        totalSales: number;
+      }>;
+    const salesByMonth = salesByMonthRaw.map((s) => ({
+      month: s.month,
+      totalSales: Number(s.totalSales),
+    }));
+    const latestSales = await prisma.order.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      take: 4,
+    });
     return {
       success: true,
       revenue: totalSales || 0,
       sales: ordersCount || 0,
       customers: customersCount || 0,
       products: productsCount || 0,
+      salesByMonth: salesByMonth || [],
+      latestSales: latestSales || [],
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const getAllOrders = async ({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) => {
+  try {
+    const orders = await prisma.order.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: {
+          select: { name: true },
+        },
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+    const orderCount = await prisma.order.count();
+    return {
+      success: true,
+      data: orders,
+      noOfPages: Math.ceil(orderCount / limit),
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const deleteOrder = async (id: string) => {
+  try {
+    await prisma.order.delete({
+      where: {
+        id,
+      },
+    });
+    return {
+      success: true,
+      message: "Order deleted successfully",
     };
   } catch (error) {
     return {

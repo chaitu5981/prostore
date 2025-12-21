@@ -56,22 +56,24 @@ const Pagination = ({ noOfPages }: { noOfPages: number }) => {
           </SelectContent>
         </Select>
       </div>
-      <div className="flex gap-3">
-        <Button
-          disabled={page == "1"}
-          variant="outline"
-          onClick={goToPreviousPage}
-        >
-          {goingToPreviousPage ? <Loader size={20} /> : "Previous"}
-        </Button>
-        <Button
-          disabled={Number(page) == noOfPages}
-          variant="outline"
-          onClick={goToNextPage}
-        >
-          {goingToNextPage ? <Loader size={20} /> : "Next"}
-        </Button>
-      </div>
+      {noOfPages > 1 && (
+        <div className="flex gap-3">
+          <Button
+            disabled={page == "1"}
+            variant="outline"
+            onClick={goToPreviousPage}
+          >
+            {goingToPreviousPage ? <Loader size={20} /> : "Previous"}
+          </Button>
+          <Button
+            disabled={Number(page) == noOfPages}
+            variant="outline"
+            onClick={goToNextPage}
+          >
+            {goingToNextPage ? <Loader size={20} /> : "Next"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

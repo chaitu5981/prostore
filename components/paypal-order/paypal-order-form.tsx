@@ -15,11 +15,11 @@ const PaypalOrderForm = ({
   price: string;
   orderId: string;
 }) => {
+  console.log("first");
   const initialOptions = {
     clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string,
     currency: "USD",
     components: "buttons",
-    // "data-sdk-integration-source": "developer-studio",
   };
   const router = useRouter();
   const handleCreatePaypalOrder = async () => {

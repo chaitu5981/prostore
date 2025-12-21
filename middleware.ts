@@ -7,10 +7,11 @@ export default auth(async (request) => {
     /\/payment-method/,
     /\/place-order/,
     /\/profile/,
-    /\/admin/,
+    /\/admin\/(.*)/,
     /\/user\/(.*)/,
     /\/order\/(.*)/,
   ];
+  const adminPath = /\/admin\/(.*)/;
   const { pathname } = request.nextUrl;
   if (!request.auth && protectedPaths.some((p) => p.test(pathname))) {
     const newUrl = new URL(
@@ -19,6 +20,10 @@ export default auth(async (request) => {
     );
     return Response.redirect(newUrl);
   }
+  if (adminPath.test(pathname) && request.auth?.user.role != "admin")
+    return NextResponse.redirect(
+      new URL("/unauthorized", request.nextUrl.origin)
+    );
   const cartSessionIdCookie = request.cookies.get("cartSessionId");
   const response = NextResponse.next();
   if (!cartSessionIdCookie) {

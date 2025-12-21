@@ -30,6 +30,7 @@ export const formatError = (error: ErrorType): string => {
     error.name == "PrismaClientKnownRequestError"
   ) {
     const prismaError = error as PrismaError;
+    console.log(prismaError.meta);
     const field = prismaError.meta.target[0];
     return `${field.charAt(0).toUpperCase()}${field.slice(1)} already exists`;
   } else if (typeof error == "object" && error !== null && "message" in error) {
@@ -77,4 +78,10 @@ export const formatDateAndTime = (date: Date) =>
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
+  });
+export const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   });

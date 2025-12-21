@@ -28,7 +28,8 @@ const OrderContent = async ({ orderId }: { orderId: string }) => {
   const order = await getOrderById(orderId);
   if (!order) notFound();
   const session = await auth();
-  if (order.userId != session?.user.id) redirect("/unauthorized");
+  if (session?.user.role != "admin" && order.userId != session?.user.id)
+    redirect("/unauthorized");
   const shippingAddress = order.shippingAddress as ShippingAddress;
   return (
     <div className="wrapper">
