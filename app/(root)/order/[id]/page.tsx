@@ -61,7 +61,9 @@ const OrderContent = async ({ orderId }: { orderId: string }) => {
                 {`${shippingAddress.streetAddress}, ${shippingAddress.city} ${shippingAddress.postalCode}, ${shippingAddress.country}  `}
               </p>
               {order.isDelivered ? (
-                <Badge></Badge>
+                <Badge>
+                  Delivered at {formatDateAndTime(order.deliveredAt as Date)}
+                </Badge>
               ) : (
                 <Badge variant="destructive" className="mt-4">
                   Not Delivered
@@ -109,7 +111,7 @@ const OrderContent = async ({ orderId }: { orderId: string }) => {
           </Card>
         </div>
         <div className="w-full md:w-[32%]">
-          <OrderTotal order={order} />
+          <OrderTotal order={order} isAdmin={session?.user.role == "admin"} />
         </div>
       </div>
     </div>

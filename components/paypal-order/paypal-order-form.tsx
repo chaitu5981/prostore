@@ -1,8 +1,6 @@
 "use client";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { formatError } from "@/lib/utils";
 import {
   approvePaypalOrder,
   createPaypalOrder,
@@ -15,13 +13,11 @@ const PaypalOrderForm = ({
   price: string;
   orderId: string;
 }) => {
-  console.log("first");
   const initialOptions = {
     clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string,
     currency: "USD",
     components: "buttons",
   };
-  const router = useRouter();
   const handleCreatePaypalOrder = async () => {
     const res = await createPaypalOrder(orderId, price);
     if (!res.success) toast.error(res.message);
