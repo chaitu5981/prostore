@@ -34,7 +34,7 @@ const OrderContent = async ({ orderId }: { orderId: string }) => {
   return (
     <div className="wrapper">
       <p className="text-xl my-3">Order {shortenId(orderId)}</p>
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col gap-2 w-full md:w-[65%]">
           <Card>
             <CardHeader>

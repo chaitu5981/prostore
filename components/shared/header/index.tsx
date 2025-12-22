@@ -19,15 +19,8 @@ const Header = ({ role }: { role?: string }) => {
             />
             <span className="h3-bold hidden lg:block">Prostore</span>
           </Link>
-          {role == "admin" ? (
-            <AdminNavLinks />
-          ) : role == "user" ? (
-            <NavLinks />
-          ) : (
-            <></>
-          )}
         </div>
-        <Menu />
+        <Menu role={role} />
       </div>
     </div>
   );

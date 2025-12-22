@@ -16,14 +16,14 @@ const NavLinks = () => {
   ];
   const path = usePathname();
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col md:flex-row md:items-center gap-4 items-start">
       {links.map((link) => (
         <Link
           key={link.label}
           href={link.href}
           className={cn(!path.includes(link.href) && "text-gray-400")}
         >
-          {link.label}
+          <p className="text-left">{link.label}</p>
         </Link>
       ))}
     </div>

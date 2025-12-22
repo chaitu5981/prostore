@@ -10,6 +10,8 @@ import { getCartQty } from "@/lib/utils";
 import { Suspense } from "react";
 import Loader from "@/components/Loader";
 import UserButtonWrapper from "./user-button-wrapper";
+import AdminNavLinks from "./admin-nav-links";
+import NavLinks from "./nav-links";
 
 const CartBadge = async () => {
   const cart = await getCart();
@@ -20,27 +22,34 @@ const CartBadge = async () => {
   );
 };
 
-const Menu = () => {
+const Menu = ({ role }: { role?: string }) => {
   const menuItems = (
     <>
       <ModeToggle />
-      <Button asChild variant={"ghost"}>
-        <Link href="/cart">
-          <div className="relative">
-            <ShoppingCartIcon />
-            <Suspense fallback={<Loader size={10} />}>
-              <CartBadge />
-            </Suspense>
-          </div>
-          <p>Cart</p>
-        </Link>
-      </Button>
+      {role == "admin" ? (
+        <AdminNavLinks />
+      ) : role == "user" ? (
+        <NavLinks />
+      ) : (
+        <></>
+      )}
+      {/* <Button asChild variant={"ghost"}> */}
+      <Link href="/cart" className="flex gap-1">
+        <div className="relative">
+          <ShoppingCartIcon size={20} />
+          <Suspense fallback={<Loader size={10} />}>
+            <CartBadge />
+          </Suspense>
+        </div>
+        <p>Cart</p>
+      </Link>
+      {/* </Button> */}
       <UserButtonWrapper />
     </>
   );
   return (
     <div>
-      <div className="items-center gap-2 hidden md:flex">{menuItems}</div>
+      <div className="items-center gap-2 hidden md:flex gap-4">{menuItems}</div>
       <div className="md:hidden">
         <Sheet>
           <SheetTrigger asChild>
