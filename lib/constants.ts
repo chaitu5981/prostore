@@ -10,7 +10,7 @@ export const newProductDefaultValues = {
   category: "",
   brand: "",
   description: "",
-  stock: 0,
+  stock: "0",
   images: [],
   isFeatured: false,
   banner: "",

@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getAllProducts } from "@/lib/actions/products.actions";
+import { deleteProduct, getAllProducts } from "@/lib/actions/products.actions";
 import { currencyFormatter, shortenId } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -48,24 +48,28 @@ const Products = async ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {res.data?.map((product) => (
-            <TableRow key={product.id}>
-              <TableCell>{shortenId(product.id)}</TableCell>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>
-                {currencyFormatter(product.price.toString())}
-              </TableCell>
-              <TableCell>{product.category}</TableCell>
-              <TableCell>{product.stock}</TableCell>
-              <TableCell>{product.rating.toString()}</TableCell>
-              <TableCell>
-                <Button asChild variant="outline">
-                  <Link href={`/admin/products/create`}>Edit</Link>
-                </Button>
-                {/* <DeleteAlert id={product.id} action={} /> */}
-              </TableCell>
-            </TableRow>
-          ))}
+          {!res.data || res?.data.length == 0 ? (
+            <p>No Products found</p>
+          ) : (
+            res.data?.map((product) => (
+              <TableRow key={product.id}>
+                <TableCell>{shortenId(product.id)}</TableCell>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>
+                  {currencyFormatter(product.price.toString())}
+                </TableCell>
+                <TableCell>{product.category}</TableCell>
+                <TableCell>{product.stock}</TableCell>
+                <TableCell>{product.rating.toString()}</TableCell>
+                <TableCell>
+                  <Button asChild variant="outline">
+                    <Link href={`/admin/products/create`}>Edit</Link>
+                  </Button>
+                  <DeleteAlert id={product.id} action={deleteProduct} />
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
       <Pagination noOfPages={res.noOfPages as number} />

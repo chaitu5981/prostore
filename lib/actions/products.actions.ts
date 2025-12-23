@@ -1,3 +1,4 @@
+"use server";
 import { Product } from "@/types";
 import { prisma } from "@/lib/prisma";
 import { Product as PrismaProduct } from "@/generated/prisma/client";
@@ -14,10 +15,11 @@ const convertPrismaObjToJSObj = (p: PrismaProduct) => ({
   isFeatured: p.isFeatured,
   price: p.price.toString(),
   slug: p.slug,
-  stock: p.stock,
+  stock: p.stock.toString(),
   rating: p.rating.toString(),
   numReviews: p.numReviews,
   createdAt: p.createdAt,
+  banner: p.banner,
 });
 
 export const getProducts = async (): Promise<Product[]> => {
@@ -72,7 +74,7 @@ export const createProduct = async (
   try {
     const product = insertProductSchema.parse(data);
     await prisma.product.create({
-      data: product,
+      data: { ...product, stock: Number(product.stock) },
     });
     return {
       success: true,
@@ -100,7 +102,7 @@ export const updateProduct = async (
       where: {
         id: product.id,
       },
-      data: product,
+      data: { ...product, stock: Number(product.stock) },
     });
     return {
       success: true,
@@ -110,6 +112,25 @@ export const updateProduct = async (
     return {
       success: false,
       error: formatError(error),
+    };
+  }
+};
+
+export const deleteProduct = async (id: string) => {
+  try {
+    await prisma.product.delete({
+      where: {
+        id,
+      },
+    });
+    return {
+      success: true,
+      message: "Product deleted successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
     };
   }
 };
