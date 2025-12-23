@@ -44,7 +44,7 @@ const ProductDetailsContent = async ({ slug }: { slug: string }) => {
             </div>
             <div className="flex justify-between">
               <p>Status</p>
-              {product.stock > 0 ? (
+              {Number(product.stock) > 0 ? (
                 <div className="flex flex-col">
                   <Badge variant={"outline"}>In Stock</Badge>
                 </div>
@@ -52,7 +52,7 @@ const ProductDetailsContent = async ({ slug }: { slug: string }) => {
                 <Badge variant="destructive">Out of Stock</Badge>
               )}
             </div>
-            {product.stock > 0 && (
+            {Number(product.stock) > 0 && (
               <AddToCart
                 cart={cart}
                 item={{
