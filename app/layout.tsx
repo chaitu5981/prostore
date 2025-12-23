@@ -4,6 +4,10 @@ import "@/assets/styles/globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
+import { extractRouterConfig } from "uploadthing/server";
+
 const inter = Inter({
   subsets: ["latin"],
 });
@@ -32,6 +36,7 @@ export default function RootLayout({
           defaultTheme={"light"}
           disableTransitionOnChange
         >
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
           <Toaster position="top-center" />
         </ThemeProvider>

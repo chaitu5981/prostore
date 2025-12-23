@@ -14,8 +14,10 @@ export const insertProductSchema = z.object({
   description: z
     .string()
     .min(3, "Description should have at least 3 characters"),
+  stock: z.number(),
   images: z.array(z.string()).min(1, "Product should have at least 1 image "),
   isFeatured: z.boolean(),
+  banner: z.string().nullable(),
   price: currency,
 });
 
@@ -24,6 +26,9 @@ export const signInSchema = z.object({
   password: z.string().min(6, "Password should have at least 6 characters"),
 });
 
+export const updateProductSchema = insertProductSchema.extend({
+  id: z.string().min(1, "Product Id is required"),
+});
 export const signUpSchema = z
   .object({
     name: z.string().min(3, "Name should have at least 3 characters"),
@@ -110,5 +115,5 @@ export const paymentResultSchema = z.object({
 });
 
 export const updateUserProfileSchema = z.object({
-  name : z.string().min(3,"Name should be at least 3 characters long")
-})
+  name: z.string().min(3, "Name should be at least 3 characters long"),
+});
