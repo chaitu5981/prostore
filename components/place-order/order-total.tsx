@@ -16,6 +16,7 @@ import {
 } from "@/lib/actions/order.actions";
 import { toast } from "sonner";
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 const OrderTotal = ({
   order,
@@ -26,11 +27,14 @@ const OrderTotal = ({
 }) => {
   const [isPending1, startTransition1] = useTransition();
   const [isPending2, startTransition2] = useTransition();
+  const router = useRouter();
   const handleMarkAsPaid = () =>
     startTransition1(async () => {
       const res = await updateCODOrderAsPaid(order.id);
-      if (res.success) toast.success(res.message);
-      else toast.error(res.message);
+      if (res.success) {
+        toast.success(res.message);
+        router.refresh();
+      } else toast.error(res.message);
     });
   const handleMarkAsDelivered = () =>
     startTransition2(async () => {
