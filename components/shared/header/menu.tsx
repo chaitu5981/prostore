@@ -33,7 +33,7 @@ const Menu = ({ role }: { role?: string }) => {
       ) : (
         <></>
       )}
-      <div className="md:flex-row flex flex-col  gap-4 md:items-center">
+      <div className="md:flex-row flex flex-col  gap-4 md:items-center ml-auto">
         {role == "admin" && <SearchForm />}
         <ModeToggle />
         {/* <Button asChild variant={"ghost"}> */}

@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import Menu from "./menu";
-import NavLinks from "./nav-links";
-import AdminNavLinks from "./admin-nav-links";
 
 const Header = ({ role }: { role?: string }) => {
   return (
