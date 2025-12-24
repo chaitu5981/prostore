@@ -33,7 +33,6 @@ const OrderTotal = ({
       const res = await updateCODOrderAsPaid(order.id);
       if (res.success) {
         toast.success(res.message);
-        router.refresh();
       } else toast.error(res.message);
     });
   const handleMarkAsDelivered = () =>

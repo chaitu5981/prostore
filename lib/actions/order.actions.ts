@@ -9,6 +9,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { paypal } from "../paypal";
 import { PaymentResult, ShippingAddress } from "@/types";
 import { OrderWhereInput, ProductWhereInput } from "@/generated/prisma/models";
+import { revalidatePath } from "next/cache";
 
 export const getOrderById = async (orderId: string) => {
   const order = await prisma.order.findFirst({
@@ -416,6 +417,7 @@ export const deleteOrder = async (id: string) => {
 export const updateCODOrderAsPaid = async (id: string) => {
   try {
     updateOrderToPaid(id);
+    revalidatePath(`/order/${id}`);
     return {
       success: true,
       message: "Order marked as Paid",
