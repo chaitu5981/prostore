@@ -24,8 +24,7 @@ const CartBadge = async () => {
 
 const Menu = ({ role }: { role?: string }) => {
   const menuItems = (
-    <>
-      <ModeToggle />
+    <div className="md:flex md:justify-between md:flex-1">
       {role == "admin" ? (
         <AdminNavLinks />
       ) : role == "user" ? (
@@ -33,23 +32,26 @@ const Menu = ({ role }: { role?: string }) => {
       ) : (
         <></>
       )}
-      {/* <Button asChild variant={"ghost"}> */}
-      <Link href="/cart" className="flex gap-1">
-        <div className="relative">
-          <ShoppingCartIcon size={20} />
-          <Suspense fallback={<Loader size={10} />}>
-            <CartBadge />
-          </Suspense>
-        </div>
-        <p>Cart</p>
-      </Link>
-      {/* </Button> */}
-      <UserButtonWrapper />
-    </>
+      <div className="md:flex-row flex flex-col  gap-4 md:items-center">
+        <ModeToggle />
+        {/* <Button asChild variant={"ghost"}> */}
+        <Link href="/cart" className="flex gap-1">
+          <div className="relative">
+            <ShoppingCartIcon size={20} />
+            <Suspense fallback={<Loader size={10} />}>
+              <CartBadge />
+            </Suspense>
+          </div>
+          <p>Cart</p>
+        </Link>
+        {/* </Button> */}
+        <UserButtonWrapper />
+      </div>
+    </div>
   );
   return (
-    <div>
-      <div className="items-center gap-2 hidden md:flex gap-4">{menuItems}</div>
+    <div className="md:flex-1">
+      <div className="items-center hidden md:flex gap-4">{menuItems}</div>
       <div className="md:hidden">
         <Sheet>
           <SheetTrigger asChild>
@@ -58,6 +60,7 @@ const Menu = ({ role }: { role?: string }) => {
               size={"icon"}
               aria-label="Open menu"
               type="button"
+              className="ml-auto"
             >
               <EllipsisVertical className="size-6" />
             </Button>

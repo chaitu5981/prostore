@@ -7,7 +7,7 @@ import AdminNavLinks from "./admin-nav-links";
 const Header = ({ role }: { role?: string }) => {
   return (
     <div className="border-b-2 border-gray-300">
-      <div className="flex-between wrapper">
+      <div className="flex gap-4 items-center justify-between md:justify-start wrapper">
         <div className="flex gap-8 items-center">
           <Link href="/" className="flex items-center gap-2">
             <Image

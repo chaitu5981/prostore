@@ -5,6 +5,7 @@ import { Product as PrismaProduct } from "@/generated/prisma/client";
 import { formatError } from "../utils";
 import z from "zod";
 import { insertProductSchema, updateProductSchema } from "../validators";
+import { ProductWhereInput } from "@/generated/prisma/models";
 const convertPrismaObjToJSObj = (p: PrismaProduct) => ({
   name: p.name,
   brand: p.brand,
@@ -38,16 +39,39 @@ export const getProductBySlug = async (
   if (res) return convertPrismaObjToJSObj(res);
   else return null;
 };
+export const getProductById = async (
+  productId: string
+): Promise<Product | null> => {
+  const parsed = z.uuid().safeParse(productId);
+  if (!parsed.success) return null;
+  const res = await prisma.product.findFirst({
+    where: { id: parsed.data },
+  });
+  if (res) return convertPrismaObjToJSObj(res);
+  else return null;
+};
 
 export const getAllProducts = async ({
   limit,
   page,
+  query,
 }: {
   limit: number;
   page: number;
+  query: string;
 }) => {
   try {
+    const queryFilter: ProductWhereInput =
+      query && query != "all"
+        ? {
+            name: {
+              contains: query,
+              mode: "insensitive",
+            },
+          }
+        : {};
     const products = await prisma.product.findMany({
+      where: queryFilter,
       orderBy: {
         createdAt: "desc",
       },
@@ -106,7 +130,7 @@ export const updateProduct = async (
     });
     return {
       success: true,
-      message: "Product created successfully",
+      message: "Product updated successfully",
     };
   } catch (error) {
     return {

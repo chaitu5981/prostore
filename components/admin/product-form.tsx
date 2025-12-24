@@ -15,13 +15,20 @@ import Image from "next/image";
 import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
 import { useTransition } from "react";
-import { createProduct } from "@/lib/actions/products.actions";
+import { createProduct, updateProduct } from "@/lib/actions/products.actions";
 import { useRouter } from "next/navigation";
 import Loader from "../Loader";
-const ProductForm = ({ type }: { type: string }) => {
+import { Product } from "@/types";
+const ProductForm = ({
+  type,
+  product,
+}: {
+  type: string;
+  product?: Product;
+}) => {
   const form = useForm<z.infer<typeof insertProductSchema>>({
     resolver: zodResolver(insertProductSchema),
-    defaultValues: newProductDefaultValues,
+    defaultValues: type == "create" ? newProductDefaultValues : product,
   });
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -33,10 +40,13 @@ const ProductForm = ({ type }: { type: string }) => {
     values
   ) => {
     startTransition(async () => {
-      const res = await createProduct(values);
-      if (!res.success) toast.error(res.message);
+      let res;
+      if (type == "create") res = await createProduct(values);
+      else if (product)
+        res = await updateProduct({ id: product.id, ...values });
+      if (res && !res.success) toast.error(res.message);
       else {
-        toast.success(res.message);
+        toast.success(res?.message);
         router.back();
       }
     });
@@ -79,7 +89,7 @@ const ProductForm = ({ type }: { type: string }) => {
                   </Field>
                 )}
               />
-              <Button onClick={generateSlug} className="my-3">
+              <Button onClick={generateSlug} type="button" className="my-3">
                 Generate
               </Button>
             </div>
@@ -167,17 +177,19 @@ const ProductForm = ({ type }: { type: string }) => {
               <Field data-invalid={fieldState.invalid} className="flex-1">
                 <FieldLabel htmlFor="images">Images</FieldLabel>
                 <Card>
-                  <CardContent className="flex gap-4">
-                    {field.value.map((image) => (
-                      <Image
-                        key={image}
-                        src={image}
-                        alt="Product Image"
-                        width={100}
-                        height={100}
-                        className="object-cover object-center w-15 h-15"
-                      />
-                    ))}
+                  <CardContent className="flex flex-col gap-4">
+                    <div className="flex gap-4 flex-wrap">
+                      {field.value.map((image) => (
+                        <Image
+                          key={image}
+                          src={image}
+                          alt="Product Image"
+                          width={100}
+                          height={100}
+                          className="object-cover object-center w-15 h-15"
+                        />
+                      ))}
+                    </div>
                     <UploadButton
                       endpoint="imageUploader"
                       onClientUploadComplete={(res) => {
@@ -274,7 +286,11 @@ const ProductForm = ({ type }: { type: string }) => {
           />
         </FieldGroup>
         <Button className="my-5 w-full">
-          {isPending ? <Loader size={20} /> : "Create Product"}
+          {isPending ? (
+            <Loader size={20} />
+          ) : (
+            `${type == "create" ? "Create" : "Update"} Product`
+          )}
         </Button>
       </form>
     </div>

@@ -63,7 +63,7 @@ const Products = async ({
                 <TableCell>{product.rating.toString()}</TableCell>
                 <TableCell>
                   <Button asChild variant="outline">
-                    <Link href={`/admin/products/create`}>Edit</Link>
+                    <Link href={`/admin/products/${product.id}`}>Edit</Link>
                   </Button>
                   <DeleteAlert id={product.id} action={deleteProduct} />
                 </TableCell>
