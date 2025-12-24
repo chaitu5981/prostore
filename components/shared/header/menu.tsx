@@ -12,6 +12,7 @@ import Loader from "@/components/Loader";
 import UserButtonWrapper from "./user-button-wrapper";
 import AdminNavLinks from "./admin-nav-links";
 import NavLinks from "./nav-links";
+import SearchForm from "./search-form";
 
 const CartBadge = async () => {
   const cart = await getCart();
@@ -33,6 +34,7 @@ const Menu = ({ role }: { role?: string }) => {
         <></>
       )}
       <div className="md:flex-row flex flex-col  gap-4 md:items-center">
+        {role == "admin" && <SearchForm />}
         <ModeToggle />
         {/* <Button asChild variant={"ghost"}> */}
         <Link href="/cart" className="flex gap-1">

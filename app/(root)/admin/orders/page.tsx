@@ -9,18 +9,20 @@ import { Suspense } from "react";
 const AdminOrders = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ page: string; limit: string }>;
+  searchParams: Promise<{ page: string; limit: string; query: string }>;
 }) => {
-  const { page, limit } = await searchParams;
+  const { page, limit, query } = await searchParams;
 
   const res = await getAllOrders({
     page: Number(page) || 1,
     limit: Number(limit) || 3,
+    query: query || "",
   });
   if (!res.success) throw new Error(res.message);
   const displayedOrders = res.data?.map((order) => ({
     id: order.id,
     date: formatDateAndTime(order.createdAt),
+    buyer: order.user.name,
     total: currencyFormatter(order.totalPrice.toString()),
     paid:
       order.isPaid && order.paidAt
@@ -48,7 +50,7 @@ const AdminOrders = async ({
 const AdminOrdersPage = ({
   searchParams,
 }: {
-  searchParams: Promise<{ page: string; limit: string }>;
+  searchParams: Promise<{ page: string; limit: string; query: string }>;
 }) => {
   return (
     <Suspense fallback={<Loader size={50} />}>

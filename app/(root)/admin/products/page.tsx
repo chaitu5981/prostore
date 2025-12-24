@@ -19,12 +19,13 @@ import { toast } from "sonner";
 const Products = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ limit: string; page: string }>;
+  searchParams: Promise<{ limit: string; page: string; query: string }>;
 }) => {
-  const { page, limit } = await searchParams;
+  const { page, limit, query } = await searchParams;
   const res = await getAllProducts({
     limit: Number(limit) || 3,
     page: Number(page) || 1,
+    query: query || "",
   });
   if (!res.success) toast.error(res.message);
   return (
@@ -78,7 +79,7 @@ const Products = async ({
 };
 
 const ProductsPage = (props: {
-  searchParams: Promise<{ limit: string; page: string }>;
+  searchParams: Promise<{ limit: string; page: string; query: string }>;
 }) => {
   return (
     <Suspense fallback={<Loader size={50} />}>

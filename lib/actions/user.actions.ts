@@ -12,6 +12,7 @@ import { prisma } from "../prisma";
 import { hashSync } from "bcrypt-ts-edge";
 import { formatError } from "../utils";
 import { PaymentMethod, ShippingAddress } from "@/types";
+import { UserWhereInput } from "@/generated/prisma/models";
 
 export const signInWithCredentials = async (formData: FormData) => {
   try {
@@ -82,6 +83,67 @@ export const getUserById = async (userId: string) => {
   }
 };
 
+export const getAllUsers = async ({
+  limit,
+  page,
+  query,
+}: {
+  limit: number;
+  page: number;
+  query: string;
+}) => {
+  try {
+    const queryFilter: UserWhereInput =
+      query && query != "all"
+        ? {
+            name: {
+              contains: query,
+              mode: "insensitive",
+            },
+          }
+        : {};
+    const users = await prisma.user.findMany({
+      where: queryFilter,
+      orderBy: {
+        createdAt: "desc",
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    const productCount = await prisma.user.count({
+      where: queryFilter,
+    });
+    return {
+      success: true,
+      data: users,
+      noOfPages: Math.ceil(productCount / limit),
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const deleteUser = async (id: string) => {
+  try {
+    await prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+    return {
+      success: true,
+      message: "User deleted successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
 export const updateUserAddress = async (data: ShippingAddress) => {
   try {
     const session = await auth();

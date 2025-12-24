@@ -20,20 +20,31 @@ const Pagination = ({ noOfPages }: { noOfPages: number }) => {
   const params = useSearchParams();
   const page = params.get("page") || "1";
   const limit = params.get("limit") || "3";
+  const query = params.get("query");
   const [goingToNextPage, startGoingToNextPage] = useTransition();
   const [goingToPreviousPage, startGoingToPreviousPage] = useTransition();
   const [changingLimit, startChangingLimit] = useTransition();
   const goToNextPage = () =>
     startGoingToNextPage(() => {
-      router.push(`${pathname}?page=${Number(page) + 1}&limit=${limit}`);
+      router.push(
+        `${pathname}?page=${Number(page) + 1}&limit=${limit}${
+          query ? "&query=" + query : ""
+        }`
+      );
     });
   const goToPreviousPage = () =>
     startGoingToPreviousPage(() => {
-      router.push(`${pathname}?page=${Number(page) - 1}&limit=${limit}`);
+      router.push(
+        `${pathname}?page=${Number(page) - 1}&limit=${limit}${
+          query ? "&query=" + query : ""
+        }`
+      );
     });
   const changeLimit = (v: string) =>
     startChangingLimit(() => {
-      router.push(`${pathname}?page=1&limit=${v}`);
+      router.push(
+        `${pathname}?page=1&limit=${v}${query ? "&query=" + query : ""}`
+      );
     });
   return (
     <div className="flex-between">

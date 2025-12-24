@@ -14,6 +14,7 @@ import { deleteOrder } from "@/lib/actions/order.actions";
 type DisplayedOrders = {
   id: string;
   date: string;
+  buyer: string;
   total: string;
   paid: string;
   delivered: string;
@@ -31,6 +32,7 @@ const OrderTable = ({
         <TableRow>
           <TableHead>ID</TableHead>
           <TableHead>DATE</TableHead>
+          <TableHead>BUYER</TableHead>
           <TableHead>TOTAL</TableHead>
           <TableHead>PAID</TableHead>
           <TableHead>DELIVERED</TableHead>
@@ -42,6 +44,7 @@ const OrderTable = ({
           <TableRow key={order.id}>
             <TableCell>{shortenId(order.id)}</TableCell>
             <TableCell>{order.date}</TableCell>
+            <TableCell>{order.buyer}</TableCell>
             <TableCell>{order.total}</TableCell>
             <TableCell>{order.paid}</TableCell>
             <TableCell>{order.delivered}</TableCell>

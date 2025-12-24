@@ -8,6 +8,7 @@ import { prisma } from "../prisma";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { paypal } from "../paypal";
 import { PaymentResult, ShippingAddress } from "@/types";
+import { OrderWhereInput, ProductWhereInput } from "@/generated/prisma/models";
 
 export const getOrderById = async (orderId: string) => {
   const order = await prisma.order.findFirst({
@@ -346,12 +347,26 @@ export const getOrderSummary = async () => {
 export const getAllOrders = async ({
   page,
   limit,
+  query,
 }: {
   page: number;
   limit: number;
+  query: string;
 }) => {
   try {
+    const queryFilter: OrderWhereInput =
+      query && query != "all"
+        ? {
+            user: {
+              name: {
+                contains: query,
+                mode: "insensitive",
+              },
+            },
+          }
+        : {};
     const orders = await prisma.order.findMany({
+      where: queryFilter,
       orderBy: {
         createdAt: "desc",
       },
@@ -363,7 +378,9 @@ export const getAllOrders = async ({
       take: limit,
       skip: (page - 1) * limit,
     });
-    const orderCount = await prisma.order.count();
+    const orderCount = await prisma.order.count({
+      where: queryFilter,
+    });
     return {
       success: true,
       data: orders,
