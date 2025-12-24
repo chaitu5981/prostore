@@ -416,8 +416,7 @@ export const deleteOrder = async (id: string) => {
 
 export const updateCODOrderAsPaid = async (id: string) => {
   try {
-    updateOrderToPaid(id);
-    revalidatePath(`/order/${id}`);
+    await updateOrderToPaid(id);
     return {
       success: true,
       message: "Order marked as Paid",
