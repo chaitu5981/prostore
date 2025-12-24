@@ -14,7 +14,7 @@ import { deleteOrder } from "@/lib/actions/order.actions";
 type DisplayedOrders = {
   id: string;
   date: string;
-  buyer: string;
+  buyer?: string;
   total: string;
   paid: string;
   delivered: string;
