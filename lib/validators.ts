@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { email, z } from "zod";
 import { formatDecimal } from "./utils";
-import { PAYMENT_METHODS } from "./constants";
+import { PAYMENT_METHODS, ROLES } from "./constants";
 
 const currency = z.string().refine((value) => {
   return /^\d+(\.\d{2})?$/.test(formatDecimal(Number(value)));
@@ -118,4 +118,10 @@ export const paymentResultSchema = z.object({
 
 export const updateUserProfileSchema = z.object({
   name: z.string().min(3, "Name should be at least 3 characters long"),
+});
+
+export const updateUserSchema = updateUserProfileSchema.extend({
+  id: z.string().min(1, "UserId should not be empty"),
+  email: z.email("Email is invalid"),
+  role: z.enum(ROLES, "Role should be among " + ROLES.join(" ")),
 });

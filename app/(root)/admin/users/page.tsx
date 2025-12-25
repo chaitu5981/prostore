@@ -31,7 +31,17 @@ const AdminUsers = async ({
   if (!res.success) toast.error(res.message);
   return (
     <div className="wrapper">
-      <p className="text-xl font-semibold">Users</p>
+      <div className="flex gap-4 items-center">
+        <p className="text-xl font-semibold mb-3">Users</p>
+        {query && (
+          <span className="flex gap-2 items-center">
+            <p>Filtered by {`"${query}"`}</p>
+            <Link href="/admin/users">
+              <Button variant="outline">Remove Filter</Button>
+            </Link>
+          </span>
+        )}
+      </div>
       <Table className="overflow-x-auto ">
         <TableHeader>
           <TableRow>

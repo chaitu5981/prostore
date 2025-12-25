@@ -5,6 +5,7 @@ import {
   shippingAddressSchema,
   signInSchema,
   signUpSchema,
+  updateUserSchema,
 } from "@/lib/validators";
 import { revalidatePath } from "next/cache";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
@@ -13,6 +14,7 @@ import { hashSync } from "bcrypt-ts-edge";
 import { formatError } from "../utils";
 import { PaymentMethod, ShippingAddress } from "@/types";
 import { UserWhereInput } from "@/generated/prisma/models";
+import z from "zod";
 
 export const signInWithCredentials = async (formData: FormData) => {
   try {
@@ -215,6 +217,29 @@ export const updateUserProfile = async (name: string) => {
     return {
       success: true,
       message: "User Profile updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const updateUser = async (user: z.infer<typeof updateUserSchema>) => {
+  try {
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        name: user.name,
+        role: user.role,
+      },
+    });
+    return {
+      success: true,
+      message: "User updated successfully",
     };
   } catch (error) {
     return {

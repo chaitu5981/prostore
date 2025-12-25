@@ -30,6 +30,17 @@ export const getProducts = async (): Promise<Product[]> => {
   return data.map((p) => convertPrismaObjToJSObj(p));
 };
 
+export const getFeaturedProducts = async (): Promise<Product[]> => {
+  const data = await prisma.product.findMany({
+    where: {
+      isFeatured: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return data.map((p) => convertPrismaObjToJSObj(p));
+};
 export const getProductBySlug = async (
   slug: string
 ): Promise<Product | null> => {
@@ -92,6 +103,14 @@ export const getAllProducts = async ({
       message: formatError(error),
     };
   }
+};
+
+export const getCategories = async () => {
+  const categories = await prisma.product.groupBy({
+    by: ["category"],
+    _count: true,
+  });
+  return categories;
 };
 
 export const createProduct = async (

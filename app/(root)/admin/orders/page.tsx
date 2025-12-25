@@ -5,6 +5,8 @@ import { currencyFormatter, formatDateAndTime } from "@/lib/utils";
 
 import { getAllOrders } from "@/lib/actions/order.actions";
 import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const AdminOrders = async ({
   searchParams,
@@ -35,7 +37,17 @@ const AdminOrders = async ({
   }));
   return (
     <div className="wrapper">
-      <p className="text-xl font-semibold mb-3">Orders</p>
+      <div className="flex gap-4 items-center">
+        <p className="text-xl font-semibold mb-3">Orders</p>
+        {query && (
+          <span className="flex gap-2 items-center">
+            <p>Filtered by {`"${query}"`}</p>
+            <Link href="/admin/orders">
+              <Button variant="outline">Remove Filter</Button>
+            </Link>
+          </span>
+        )}
+      </div>
       {!displayedOrders || displayedOrders.length == 0 ? (
         <p className="text-center font-semibold">No Orders</p>
       ) : (

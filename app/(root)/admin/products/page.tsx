@@ -31,7 +31,17 @@ const Products = async ({
   return (
     <div className="wrapper">
       <div className="flex justify-between my-3">
-        <p className="text-xl font-semibold">Products</p>
+        <div className="flex gap-4 items-center">
+          <p className="text-xl font-semibold mb-3">Products</p>
+          {query && (
+            <span className="flex gap-2 items-center">
+              <p>Filtered by {`"${query}"`}</p>
+              <Link href="/admin/products">
+                <Button variant="outline">Remove Filter</Button>
+              </Link>
+            </span>
+          )}
+        </div>
         <Button asChild>
           <Link href="/admin/products/create">Create Product</Link>
         </Button>

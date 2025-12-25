@@ -18,3 +18,5 @@ export const newProductDefaultValues = {
 };
 export const PAYMENT_METHODS = ["PayPal", "Stripe", "Cash On Delivery"];
 export const DEFAULT_PAYMENT_METHOD = "PayPal";
+
+export const ROLES = ["user", "admin"];

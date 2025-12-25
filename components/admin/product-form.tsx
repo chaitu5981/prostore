@@ -241,9 +241,9 @@ const ProductForm = ({
                         <Image
                           src={field.value}
                           alt="Banner Image"
-                          className="object-cover object-center w-full h-25"
-                          width={16}
-                          height={5}
+                          className="w-full h-100"
+                          width={1200}
+                          height={800}
                         />
                       )}
                       {!field.value && (
