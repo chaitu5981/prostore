@@ -16,7 +16,7 @@ const ProductList = ({
   }
   return (
     <div>
-      <h2 className="h3-bold">{title}</h2>
+      <h2 className="h3-bold my-4">{title}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
         {limitedData.map((item: Product) => (
           <ProductCard key={item.slug} product={item} />

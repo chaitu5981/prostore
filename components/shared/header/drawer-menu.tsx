@@ -1,10 +1,8 @@
 import Loader from "@/components/Loader";
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -16,9 +14,8 @@ import { Suspense } from "react";
 
 const DrawerMenuContent = async () => {
   const categories = await getCategories();
-  console.log(categories);
   return (
-    <DrawerContent className="h-full mr-auto max-w-sm">
+    <div className="flex flex-col">
       <DrawerHeader>
         <DrawerTitle>Select a Category</DrawerTitle>
       </DrawerHeader>
@@ -26,12 +23,15 @@ const DrawerMenuContent = async () => {
         categories.length > 0 &&
         categories.map((c) => (
           <DrawerClose key={c.category} asChild>
-            <Link href={`/products?category=${c.category}`} className="ml-4">
+            <Link
+              href={`/products?category=${c.category}`}
+              className="ml-4 my-1"
+            >
               {c.category + "(" + c._count + ")"}
             </Link>
           </DrawerClose>
         ))}
-    </DrawerContent>
+    </div>
   );
 };
 
@@ -42,7 +42,9 @@ const DrawerMenu = () => {
         <SquareMenu size={30} />
       </DrawerTrigger>
       <Suspense fallback={<Loader size={50} />}>
-        <DrawerMenuContent />
+        <DrawerContent className="h-full mr-auto max-w-sm">
+          <DrawerMenuContent />
+        </DrawerContent>
       </Suspense>
     </Drawer>
   );

@@ -25,7 +25,7 @@ const CartBadge = async () => {
 
 const Menu = ({ role }: { role?: string }) => {
   const menuItems = (
-    <div className="md:flex md:justify-between md:flex-1">
+    <div className="md:flex md:justify-between gap-2 md:flex-1">
       {role == "admin" ? (
         <AdminNavLinks />
       ) : role == "user" ? (
@@ -33,27 +33,30 @@ const Menu = ({ role }: { role?: string }) => {
       ) : (
         <></>
       )}
-      <div className="md:flex-row flex flex-col  gap-4 md:items-center ml-auto">
-        {role == "admin" && <SearchForm />}
-        <ModeToggle />
-        {/* <Button asChild variant={"ghost"}> */}
-        <Link href="/cart" className="flex gap-1">
-          <div className="relative">
-            <ShoppingCartIcon size={20} />
-            <Suspense fallback={<Loader size={10} />}>
-              <CartBadge />
-            </Suspense>
-          </div>
-          <p>Cart</p>
-        </Link>
-        {/* </Button> */}
-        <UserButtonWrapper />
-      </div>
     </div>
   );
+  const menuItems2 = (
+    <div className="md:flex-row flex flex-col  gap-4 md:items-center md:ml-auto">
+      <ModeToggle />
+      <Link href="/cart" className="flex gap-1">
+        <div className="relative">
+          <ShoppingCartIcon size={20} />
+          <Suspense fallback={<Loader size={10} />}>
+            <CartBadge />
+          </Suspense>
+        </div>
+        <p>Cart</p>
+      </Link>
+      {/* </Button> */}
+      <UserButtonWrapper />
+    </div>
+  );
+
   return (
-    <div className="md:flex-1">
+    <div className="md:flex-1 flex justify-between">
       <div className="items-center hidden md:flex gap-4">{menuItems}</div>
+      {role == "admin" && <SearchForm />}
+      <div className="items-center hidden md:flex gap-4">{menuItems2}</div>
       <div className="md:hidden">
         <Sheet>
           <SheetTrigger asChild>
@@ -72,6 +75,7 @@ const Menu = ({ role }: { role?: string }) => {
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
             {menuItems}
+            {menuItems2}
           </SheetContent>
         </Sheet>
       </div>

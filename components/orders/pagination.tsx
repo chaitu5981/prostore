@@ -18,33 +18,27 @@ const Pagination = ({ noOfPages }: { noOfPages: number }) => {
   const pathname = usePathname();
   const router = useRouter();
   const params = useSearchParams();
-  const page = params.get("page") || "1";
-  const limit = params.get("limit") || "3";
-  const query = params.get("query");
+  const page = params.get("page");
+  const limit = params.get("limit");
+  // const query = params.get("query");
   const [goingToNextPage, startGoingToNextPage] = useTransition();
   const [goingToPreviousPage, startGoingToPreviousPage] = useTransition();
   const [changingLimit, startChangingLimit] = useTransition();
+  let newParams = Object.fromEntries(params.entries());
   const goToNextPage = () =>
     startGoingToNextPage(() => {
-      router.push(
-        `${pathname}?page=${Number(page) + 1}&limit=${limit}${
-          query ? "&query=" + query : ""
-        }`
-      );
+      newParams = { ...newParams, page: (Number(page || 1) + 1).toString() };
+      router.push(`${pathname}?${new URLSearchParams(newParams).toString()}`);
     });
   const goToPreviousPage = () =>
     startGoingToPreviousPage(() => {
-      router.push(
-        `${pathname}?page=${Number(page) - 1}&limit=${limit}${
-          query ? "&query=" + query : ""
-        }`
-      );
+      newParams = { ...newParams, page: (Number(page) - 1).toString() };
+      router.push(`${pathname}?${new URLSearchParams(newParams).toString()}`);
     });
   const changeLimit = (v: string) =>
     startChangingLimit(() => {
-      router.push(
-        `${pathname}?page=1&limit=${v}${query ? "&query=" + query : ""}`
-      );
+      newParams = { ...newParams, limit: v };
+      router.push(`${pathname}?${new URLSearchParams(newParams).toString()}`);
     });
   return (
     <div className="flex-between">
@@ -52,7 +46,7 @@ const Pagination = ({ noOfPages }: { noOfPages: number }) => {
         <Label htmlFor="limit" className="my-2">
           Limit
         </Label>
-        <Select value={limit as string} onValueChange={(v) => changeLimit(v)}>
+        <Select value={limit || "3"} onValueChange={(v) => changeLimit(v)}>
           <SelectTrigger id="limit">
             {changingLimit ? <Loader size={20} /> : <SelectValue />}
           </SelectTrigger>

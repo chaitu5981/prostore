@@ -1,6 +1,7 @@
 import { CartItem, GenericError, PrismaError, ZodError } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { prices } from "./constants";
 type ErrorType = ZodError | PrismaError | GenericError | Error | unknown;
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -85,3 +86,6 @@ export const formatDate = (date: Date) =>
     month: "short",
     year: "numeric",
   });
+
+export const getPriceLabel = (price: string) =>
+  prices.find((p) => p.value == price)?.label;

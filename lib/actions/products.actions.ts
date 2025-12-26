@@ -23,9 +23,10 @@ const convertPrismaObjToJSObj = (p: PrismaProduct) => ({
   banner: p.banner,
 });
 
-export const getProducts = async (): Promise<Product[]> => {
+export const getLatestProducts = async (): Promise<Product[]> => {
   const data = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },
+    take: 4,
   });
   return data.map((p) => convertPrismaObjToJSObj(p));
 };
@@ -66,10 +67,16 @@ export const getAllProducts = async ({
   limit,
   page,
   query,
+  category,
+  price,
+  rating,
 }: {
-  limit: number;
-  page: number;
+  limit?: number;
+  page?: number;
   query: string;
+  category?: string;
+  price?: string;
+  rating?: string;
 }) => {
   try {
     const queryFilter: ProductWhereInput =
@@ -81,21 +88,54 @@ export const getAllProducts = async ({
             },
           }
         : {};
+    const categoryFilter: ProductWhereInput =
+      category && category != "all"
+        ? {
+            category,
+          }
+        : {};
+    const priceFilter: ProductWhereInput =
+      price && price != "all"
+        ? {
+            price: {
+              gte: Number(price.split("-")[0]),
+              lte: Number(price.split("-")[1]),
+            },
+          }
+        : {};
+    const ratingFilter: ProductWhereInput =
+      rating && rating != "all"
+        ? {
+            rating: {
+              gte: Number(rating),
+            },
+          }
+        : {};
     const products = await prisma.product.findMany({
-      where: queryFilter,
+      where: {
+        ...queryFilter,
+        ...categoryFilter,
+        ...priceFilter,
+        ...ratingFilter,
+      },
       orderBy: {
         createdAt: "desc",
       },
-      skip: (page - 1) * limit,
+      skip: ((page ? page : 1) - 1) * (limit ? limit : 0),
       take: limit,
     });
     const productCount = await prisma.product.count({
-      where: queryFilter,
+      where: {
+        ...queryFilter,
+        ...categoryFilter,
+        ...priceFilter,
+        ...ratingFilter,
+      },
     });
     return {
       success: true,
-      data: products,
-      noOfPages: Math.ceil(productCount / limit),
+      data: products.map((p) => convertPrismaObjToJSObj(p)),
+      noOfPages: limit && Math.ceil(productCount / limit),
     };
   } catch (error) {
     return {
