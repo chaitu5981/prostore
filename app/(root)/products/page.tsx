@@ -1,4 +1,5 @@
 import Filters from "@/components/filters";
+import Loader from "@/components/Loader";
 import ProductCard from "@/components/shared/product/ProductCard";
 import { Button } from "@/components/ui/button";
 import { getAllProducts, getCategories } from "@/lib/actions/products.actions";
@@ -91,7 +92,7 @@ const ProductsPage = async ({
   }>;
 }) => {
   return (
-    <Suspense>
+    <Suspense fallback={<Loader size={50} />}>
       <Products searchParams={searchParams} />
     </Suspense>
   );
