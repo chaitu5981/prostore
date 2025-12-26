@@ -77,9 +77,8 @@ const Products = async ({
     </div>
   );
 };
-export default Products;
 
-export const ProductsPage = async ({
+const ProductsPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{
@@ -97,3 +96,4 @@ export const ProductsPage = async ({
     </Suspense>
   );
 };
+export default ProductsPage;
