@@ -30,7 +30,9 @@ const ProductsGrid = ({ products }: { products: Product[] }) => {
       prevProducts.current.length != products.length ||
       products.some((p, i) => p.id != prevProducts.current[i]?.id)
     ) {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 100);
       prevProducts.current = products;
     }
   }, [products]);
