@@ -1,9 +1,11 @@
 import Filters from "@/components/filters";
 import Loader from "@/components/Loader";
+import ProductsGrid from "@/components/products-grid";
 import ProductCard from "@/components/shared/product/ProductCard";
 import { Button } from "@/components/ui/button";
 import { getAllProducts, getCategories } from "@/lib/actions/products.actions";
 import { getPriceLabel } from "@/lib/utils";
+import { Product } from "@/types";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -64,15 +66,7 @@ const Products = async ({
               )}
             </div>
           }
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {res.data?.length == 0 ? (
-              <p>No Products found</p>
-            ) : (
-              res.data?.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            )}
-          </div>
+          <ProductsGrid products={res.data as Product[]} />
         </div>
       </div>
     </div>
