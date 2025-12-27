@@ -1,14 +1,20 @@
 "use client";
+import { useProductsLoadingContext } from "@/app/context/products-loading-provider";
 import { getCategories } from "@/lib/actions/products.actions";
 import { prices } from "@/lib/constants";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "./ui/button";
 const ratings = ["4", "3", "2", "1"];
 const Filters = ({ categories }: { categories: string[] }) => {
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
   const { category, price, rating } = params;
-  const getNewUrl = ({
+  const context = useProductsLoadingContext();
+  let setProductsLoading: (loading: boolean) => void;
+  if (context) setProductsLoading = context.setProductsLoading;
+  const router = useRouter();
+  const handleSubmit = ({
     category,
     price,
     rating,
@@ -17,72 +23,82 @@ const Filters = ({ categories }: { categories: string[] }) => {
     price?: string;
     rating?: string;
   }) => {
+    let newUrl;
     if (category)
-      return `/products?${new URLSearchParams({ ...params, category })}`;
-    if (price) return `/products?${new URLSearchParams({ ...params, price })}`;
-    if (rating)
-      return `/products?${new URLSearchParams({ ...params, rating })}`;
-    else return "/products";
+      newUrl = `/products?${new URLSearchParams({ ...params, category })}`;
+    else if (price)
+      newUrl = `/products?${new URLSearchParams({ ...params, price })}`;
+    else if (rating)
+      newUrl = `/products?${new URLSearchParams({ ...params, rating })}`;
+    else newUrl = "/products";
+    setProductsLoading(true);
+    router.push(newUrl);
   };
   return (
     <div className="space-y-4">
       <div>
         <p className="my-1">Category</p>
         <div className="flex flex-col">
-          <Link
-            href={getNewUrl({ category: "all" })}
-            className={!category || category == "all" ? "font-semibold" : ""}
+          <Button
+            variant="link"
+            type="button"
+            onClick={() => handleSubmit({ category: "all" })}
           >
             Any
-          </Link>
+          </Button>
           {categories.map((c) => (
-            <Link
+            <Button
+              variant="link"
               key={c}
-              href={getNewUrl({ category: c })}
+              onClick={() => handleSubmit({ category: c })}
               className={category == c ? "font-semibold" : ""}
             >
               {c}
-            </Link>
+            </Button>
           ))}
         </div>
       </div>
       <div>
         <p className="my-1">Price</p>
         <div className="flex flex-col">
-          <Link
-            href={getNewUrl({ price: "all" })}
+          <Button
+            variant="link"
+            onClick={() => handleSubmit({ price: "all" })}
             className={!price || price == "all" ? "font-semibold" : ""}
           >
             Any
-          </Link>
+          </Button>
           {prices.map((p) => (
-            <Link
+            <Button
+              variant="link"
               key={p.value}
-              href={getNewUrl({ price: p.value })}
+              onClick={() => handleSubmit({ price: p.value })}
               className={price == p.value ? "font-semibold" : ""}
             >
               {p.label}
-            </Link>
+            </Button>
           ))}
         </div>
       </div>
       <div>
         <p className="my-1">Ratings</p>
         <div className="flex flex-col">
-          <Link
-            href={getNewUrl({ rating: "all" })}
+          <Button
+            variant="link"
+            onClick={() => handleSubmit({ rating: "all" })}
             className={!rating || rating == "all" ? "font-semibold" : ""}
           >
             Any
-          </Link>
+          </Button>
           {ratings.map((r) => (
-            <Link
+            <Button
+              variant="link"
               key={r}
-              href={getNewUrl({ rating: r })}
+              onClick={() => handleSubmit({ rating: r })}
               className={rating == r ? "font-semibold" : ""}
             >
               {r + " stars & above"}
-            </Link>
+            </Button>
           ))}
         </div>
       </div>

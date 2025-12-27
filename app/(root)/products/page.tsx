@@ -1,3 +1,4 @@
+import ProductsLoadingProvider from "@/app/context/products-loading-provider";
 import Filters from "@/components/filters";
 import Loader from "@/components/Loader";
 import ProductsGrid from "@/components/products-grid";
@@ -32,43 +33,45 @@ const Products = async ({
 
   return (
     <div className="wrapper">
-      <div className="grid grid-cols-4">
-        <div className="col-span-1">
-          <Filters categories={categories.map((c) => c.category)} />
+      <ProductsLoadingProvider>
+        <div className="grid grid-cols-4">
+          <div className="col-span-1">
+            <Filters categories={categories.map((c) => c.category)} />
+          </div>
+          <div className="col-span-3">
+            {
+              <div className="flex gap-2 items-center mb-2">
+                {category && category !== "all" && (
+                  <div className="space-x-2">
+                    <span className="font-semibold">Category:</span>
+                    <span>{category}</span>
+                  </div>
+                )}
+                {price && price != "all" && (
+                  <div className="space-x-2">
+                    <span className="font-semibold">Price:</span>
+                    <span>{getPriceLabel(price)}</span>
+                  </div>
+                )}
+                {rating && rating != "all" && (
+                  <div className="space-x-2">
+                    <span className="font-semibold">Rating:</span>
+                    <span>{rating + " stars & above"}</span>
+                  </div>
+                )}
+                {((category && category != "all") ||
+                  (price && price != "all") ||
+                  (rating && rating != "all")) && (
+                  <Button asChild variant="outline">
+                    <Link href="/products">Clear Filters</Link>
+                  </Button>
+                )}
+              </div>
+            }
+            <ProductsGrid products={res.data as Product[]} />
+          </div>
         </div>
-        <div className="col-span-3">
-          {
-            <div className="flex gap-2 items-center mb-2">
-              {category && category !== "all" && (
-                <div className="space-x-2">
-                  <span className="font-semibold">Category:</span>
-                  <span>{category}</span>
-                </div>
-              )}
-              {price && price != "all" && (
-                <div className="space-x-2">
-                  <span className="font-semibold">Price:</span>
-                  <span>{getPriceLabel(price)}</span>
-                </div>
-              )}
-              {rating && rating != "all" && (
-                <div className="space-x-2">
-                  <span className="font-semibold">Rating:</span>
-                  <span>{rating + " stars & above"}</span>
-                </div>
-              )}
-              {((category && category != "all") ||
-                (price && price != "all") ||
-                (rating && rating != "all")) && (
-                <Button asChild variant="outline">
-                  <Link href="/products">Clear Filters</Link>
-                </Button>
-              )}
-            </div>
-          }
-          <ProductsGrid products={res.data as Product[]} />
-        </div>
-      </div>
+      </ProductsLoadingProvider>
     </div>
   );
 };
