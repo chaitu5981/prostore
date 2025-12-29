@@ -2,7 +2,7 @@ import ProductsLoadingProvider from "@/app/context/products-loading-provider";
 import Filters from "@/components/filters";
 import Loader from "@/components/Loader";
 import ProductsGrid from "@/components/products-grid";
-import ProductCard from "@/components/shared/product/ProductCard";
+import Sorting from "@/components/sorting";
 import { Button } from "@/components/ui/button";
 import { getAllProducts, getCategories } from "@/lib/actions/products.actions";
 import { getPriceLabel } from "@/lib/utils";
@@ -20,14 +20,16 @@ const Products = async ({
     category: string;
     price: string;
     rating: string;
+    sort: string;
   }>;
 }) => {
-  const { query, category, price, rating } = await searchParams;
+  const { query, category, price, rating, sort } = await searchParams;
   const res = await getAllProducts({
     query: query || "",
     category: category || "all",
     price: price || "all",
     rating: rating || "all",
+    sort,
   });
   const categories = await getCategories();
 
@@ -39,35 +41,38 @@ const Products = async ({
             <Filters categories={categories.map((c) => c.category)} />
           </div>
           <div className="col-span-3">
-            {
-              <div className="flex gap-2 items-center mb-2">
-                {category && category !== "all" && (
-                  <div className="space-x-2">
-                    <span className="font-semibold">Category:</span>
-                    <span>{category}</span>
-                  </div>
-                )}
-                {price && price != "all" && (
-                  <div className="space-x-2">
-                    <span className="font-semibold">Price:</span>
-                    <span>{getPriceLabel(price)}</span>
-                  </div>
-                )}
-                {rating && rating != "all" && (
-                  <div className="space-x-2">
-                    <span className="font-semibold">Rating:</span>
-                    <span>{rating + " stars & above"}</span>
-                  </div>
-                )}
-                {((category && category != "all") ||
-                  (price && price != "all") ||
-                  (rating && rating != "all")) && (
-                  <Button asChild variant="outline">
-                    <Link href="/products">Clear Filters</Link>
-                  </Button>
-                )}
+            <div className="flex-between my-2">
+              <div>
+                <div className="flex gap-2 items-center mb-2">
+                  {category && category !== "all" && (
+                    <div className="flex gap-1">
+                      <p className="font-semibold">Category:</p>
+                      <p>{category}</p>
+                    </div>
+                  )}
+                  {price && price != "all" && (
+                    <div className="flex gap-1">
+                      <p className="font-semibold">Price:</p>
+                      <p>{getPriceLabel(price)}</p>
+                    </div>
+                  )}
+                  {rating && rating != "all" && (
+                    <div className="flex gap-1">
+                      <p className="font-semibold">Rating:</p>
+                      <p>{rating + " stars & above"}</p>
+                    </div>
+                  )}
+                  {((category && category != "all") ||
+                    (price && price != "all") ||
+                    (rating && rating != "all")) && (
+                    <Button asChild variant="outline">
+                      <Link href="/products">Clear Filters</Link>
+                    </Button>
+                  )}
+                </div>
               </div>
-            }
+              <Sorting />
+            </div>
             <ProductsGrid products={res.data as Product[]} />
           </div>
         </div>
@@ -86,6 +91,7 @@ const ProductsPage = async ({
     category: string;
     price: string;
     rating: string;
+    sort: string;
   }>;
 }) => {
   return (

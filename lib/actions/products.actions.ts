@@ -70,6 +70,7 @@ export const getAllProducts = async ({
   category,
   price,
   rating,
+  sort,
 }: {
   limit?: number;
   page?: number;
@@ -77,6 +78,7 @@ export const getAllProducts = async ({
   category?: string;
   price?: string;
   rating?: string;
+  sort?: string;
 }) => {
   try {
     const queryFilter: ProductWhereInput =
@@ -111,6 +113,26 @@ export const getAllProducts = async ({
             },
           }
         : {};
+    const sortOrder =
+      !sort || sort == "newest"
+        ? {
+            createdAt: "desc" as const,
+          }
+        : sort == "lowest"
+        ? {
+            price: "asc" as const,
+          }
+        : sort == "highest"
+        ? {
+            price: "desc" as const,
+          }
+        : sort == "rating"
+        ? {
+            rating: "desc" as const,
+          }
+        : {
+            createdAt: "desc" as const,
+          };
     const products = await prisma.product.findMany({
       where: {
         ...queryFilter,
@@ -118,9 +140,7 @@ export const getAllProducts = async ({
         ...priceFilter,
         ...ratingFilter,
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: sortOrder,
       skip: ((page ? page : 1) - 1) * (limit ? limit : 0),
       take: limit,
     });

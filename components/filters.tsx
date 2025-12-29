@@ -43,6 +43,7 @@ const Filters = ({ categories }: { categories: string[] }) => {
             variant="link"
             type="button"
             onClick={() => handleSubmit({ category: "all" })}
+            className={!category || category == "all" ? "font-semibold" : ""}
           >
             Any
           </Button>
