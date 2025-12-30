@@ -20,7 +20,7 @@ export const PAYMENT_METHODS = ["PayPal", "Stripe", "Cash On Delivery"];
 export const DEFAULT_PAYMENT_METHOD = "PayPal";
 
 export const ROLES = ["user", "admin"];
-
+export const STAR_COLOR = "#E8BD41";
 export const prices = [
   {
     label: "$1 to $50",
@@ -43,3 +43,11 @@ export const prices = [
     value: "501-1000",
   },
 ];
+
+export const reviewDefaultValues = {
+  title: "",
+  description: "",
+  rating: "",
+  productId: "",
+  userId: "",
+};

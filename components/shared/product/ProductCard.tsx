@@ -8,6 +8,7 @@ import Image from "next/image";
 import ProductPrice from "./ProductPrice";
 import { Product } from "@/types";
 import Link from "next/link";
+import Rating from "@/components/review/rating";
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
@@ -27,7 +28,10 @@ const ProductCard = ({ product }: { product: Product }) => {
           <p className="truncate font-semibold text-sm">{product.name}</p>
         </CardContent>
         <CardFooter className="w-full justify-between">
-          <p>{product.rating} stars</p>
+          <div className="flex gap-2 items-center">
+            <Rating rating={Number(product.rating)} />
+            <p>Stars</p>
+          </div>
           <ProductPrice price={Number(product.price)} />
         </CardFooter>
       </Card>

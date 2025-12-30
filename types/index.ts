@@ -4,6 +4,7 @@ import {
   insertOrderItemSchema,
   insertOrderSchema,
   insertProductSchema,
+  insertReviewSchema,
   paymentMethodSchema,
   paymentResultSchema,
   shippingAddressSchema,
@@ -65,4 +66,13 @@ export type OrderPrices = {
   taxPrice: string;
   shippingPrice: string;
   totalPrice: string;
+};
+
+export type Review = z.infer<typeof insertReviewSchema> & {
+  id: string;
+  createdAt: Date;
+  user?: {
+    name: string;
+  };
+  isVerifiedPurchase: boolean;
 };

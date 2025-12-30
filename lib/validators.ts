@@ -125,3 +125,15 @@ export const updateUserSchema = updateUserProfileSchema.extend({
   email: z.email("Email is invalid"),
   role: z.enum(ROLES, "Role should be among " + ROLES.join(" ")),
 });
+
+export const insertReviewSchema = z.object({
+  title: z.string().min(3, "Title should have at least 3 characters"),
+  description: z
+    .string()
+    .min(3, "Description should have at least 3 characters"),
+  rating: z.string().refine((v) => Number(v) >= 1 && Number(v) <= 5, {
+    message: "Rating should be a number between 1 and 5",
+  }),
+  userId: z.string().min(1, "User is required"),
+  productId: z.string().min(1, "Product is required"),
+});

@@ -1,11 +1,16 @@
+import { auth } from "@/auth";
 import Loader from "@/components/Loader";
+import Rating from "@/components/review/rating";
+import ReviewForm from "@/components/review/review-form";
+import ReviewList from "@/components/review/review-list";
 import AddToCart from "@/components/shared/product/add-to-cart";
 import ProductImages from "@/components/shared/product/ProductImages";
 import ProductPrice from "@/components/shared/product/ProductPrice";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { getCart } from "@/lib/actions/cart.actions";
 import { getProductBySlug } from "@/lib/actions/products.actions";
+import { getAllReviews } from "@/lib/actions/review.actions";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 export const metadata = {
@@ -13,9 +18,10 @@ export const metadata = {
 };
 const ProductDetailsContent = async ({ slug }: { slug: string }) => {
   const product = await getProductBySlug(slug);
-  const cart = await getCart();
-
   if (!product) notFound();
+  const session = await auth();
+  const cart = await getCart();
+  const reviews = await getAllReviews(product.id);
   return (
     <div className="wrapper">
       <section className=" grid grid-cols-1 md:grid-cols-5 gap-y-5">
@@ -25,9 +31,10 @@ const ProductDetailsContent = async ({ slug }: { slug: string }) => {
         <div className="col-span-2 justify-self-center flex flex-col gap-6 min-w-0">
           <p>{product.category}</p>
           <p className="text-2xl font-semibold">{product.name}</p>
-          <p className="text-sm">
-            {product.rating} of {product.numReviews} Reviews
-          </p>
+          <div className="flex gap-3 items-center">
+            <Rating rating={Number(product.rating)} />
+            <p>of {product.numReviews} Reviews</p>
+          </div>
           <div className="bg-green-200 px-3 py-1 rounded-4xl w-fit ">
             <ProductPrice price={Number(product.price)} />
           </div>
@@ -67,6 +74,29 @@ const ProductDetailsContent = async ({ slug }: { slug: string }) => {
             )}
           </div>
         </div>
+      </section>
+      <section>
+        <p className="text-2xl font-semibold my-5">Customer Reviews</p>
+        {session?.user ? (
+          <ReviewForm
+            userId={session?.user.id as string}
+            productId={product.id}
+          />
+        ) : (
+          <Link
+            href={`/sign-in?callbackUrl=/product/${product.slug}`}
+            className="text-blue-500 underline"
+          >
+            Sign in to submit a Review
+          </Link>
+        )}
+      </section>
+      <section>
+        {reviews.length == 0 ? (
+          <p>No Reviews posted yet</p>
+        ) : (
+          <ReviewList reviews={reviews} />
+        )}
       </section>
     </div>
   );

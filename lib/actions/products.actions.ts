@@ -82,10 +82,10 @@ export const getAllProducts = async ({
 }) => {
   try {
     const queryFilter: ProductWhereInput =
-      query && query != "all"
+      query && query != "all" && query.trim() !== ""
         ? {
             name: {
-              contains: query,
+              contains: query.trim(),
               mode: "insensitive",
             },
           }
