@@ -190,7 +190,7 @@ export const approvePaypalOrder = async (orderId: string, orderID: string) => {
   }
 };
 
-const updateOrderToPaid = async (
+export const updateOrderToPaid = async (
   orderId: string,
   paymentResult?: PaymentResult
 ) => {

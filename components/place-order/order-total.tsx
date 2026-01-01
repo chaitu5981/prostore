@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import StripeForm from "../stripe/stripe-form";
 
 const OrderTotal = ({
   order,
@@ -70,6 +71,9 @@ const OrderTotal = ({
             price={order.totalPrice}
             orderId={order.id as string}
           />
+        )}
+        {!order.isPaid && !isAdmin && order.paymentMethod == "Stripe" && (
+          <StripeForm price={Number(order.totalPrice)} orderId={order.id} />
         )}
         {!order.isPaid &&
           isAdmin &&
