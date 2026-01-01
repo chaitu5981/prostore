@@ -19,6 +19,7 @@ import { createProduct, updateProduct } from "@/lib/actions/products.actions";
 import { useRouter } from "next/navigation";
 import Loader from "../Loader";
 import { Product } from "@/types";
+import { X } from "lucide-react";
 const ProductForm = ({
   type,
   product,
@@ -44,11 +45,11 @@ const ProductForm = ({
       if (type == "create") res = await createProduct(values);
       else if (product)
         res = await updateProduct({ id: product.id, ...values });
-      if (res && !res.success) toast.error(res.message);
-      else {
+      if (res && res.success) {
         toast.success(res?.message);
         router.back();
-      }
+      } else if (res && !res.success) toast.error(res.message);
+      else toast.error("Some Internal Error  ");
     });
   };
   const isFeatured = form.watch("isFeatured");
@@ -180,14 +181,26 @@ const ProductForm = ({
                   <CardContent className="flex flex-col gap-4">
                     <div className="flex gap-4 flex-wrap">
                       {field.value.map((image) => (
-                        <Image
-                          key={image}
-                          src={image}
-                          alt="Product Image"
-                          width={100}
-                          height={100}
-                          className="object-cover object-center w-15 h-15"
-                        />
+                        <div key={image} className="relative">
+                          <Image
+                            key={image}
+                            src={image}
+                            alt="Product Image"
+                            width={100}
+                            height={100}
+                            className="object-cover object-center w-15 h-15"
+                          />
+                          <button
+                            onClick={() =>
+                              field.onChange(
+                                field.value.filter((v) => v != image)
+                              )
+                            }
+                            className="absolute -top-2 -right-2 p-1 rounded-full bg-red-500"
+                          >
+                            <X size={12} color="white" />
+                          </button>
+                        </div>
                       ))}
                     </div>
                     <UploadButton
