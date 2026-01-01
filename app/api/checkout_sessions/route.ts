@@ -22,6 +22,9 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
+      metadata: {
+        orderId: body.orderId,
+      },
       mode: "payment",
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}&orderID=${body.orderId}`,
     });

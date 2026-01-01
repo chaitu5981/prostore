@@ -8,14 +8,19 @@ export async function POST(request: Request) {
     request.headers.get("stripe-signature") as string,
     process.env.STRIPE_WEBHOOK_SECRET as string
   );
-  if (event.type == "payment_intent.succeeded") {
-    const paymentIntent = event.data.object;
-    console.log("Payment Intent", paymentIntent);
+  if (event.type == "charge.succeeded") {
+    const { object } = event.data;
+    await updateOrderToPaid(object.metadata.orderId, {
+      id: object.id,
+      status: "COMPLETED",
+      emailAddress: object.billing_details.email as string,
+      pricePaid: (object.amount / 100).toString(),
+    });
     return NextResponse.json({
       message: "Updated Order to Paid",
     });
   } else
     NextResponse.json({
-      message: "Payment not successfull",
+      message: "Payment not successful",
     });
 }
