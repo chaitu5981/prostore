@@ -8,14 +8,20 @@ export async function POST(request: Request) {
     request.headers.get("stripe-signature") as string,
     process.env.STRIPE_WEBHOOK_SECRET as string
   );
-  if (event.type == "charge.succeeded") {
+  if (event.type == "checkout.session.completed") {
     const { object } = event.data;
-    await updateOrderToPaid(object.metadata.orderId, {
-      id: object.id,
-      status: "COMPLETED",
-      emailAddress: object.billing_details.email as string,
-      pricePaid: (object.amount / 100).toString(),
-    });
+    if (object.metadata) {
+      await updateOrderToPaid(object.metadata.orderId, {
+        id: object.id,
+        status: "COMPLETED",
+        emailAddress: object.customer_details?.email
+          ? object.customer_details.email
+          : "",
+        pricePaid: object.amount_total
+          ? (object.amount_total / 100).toString()
+          : "",
+      });
+    }
     return NextResponse.json({
       message: "Updated Order to Paid",
     });

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
         orderId: body.orderId,
       },
       mode: "payment",
-      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}&orderID=${body.orderId}`,
+      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}&orderId=${body.orderId}`,
     });
     return NextResponse.json({ url: session.url as string });
   } catch (err) {
