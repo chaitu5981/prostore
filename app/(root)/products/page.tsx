@@ -37,39 +37,37 @@ const Products = async ({
     <div className="wrapper">
       <ProductsLoadingProvider>
         <div className="grid grid-cols-4">
-          <div className="col-span-1">
+          <div className="col-span-4 sm:col-span-1">
             <Filters categories={categories.map((c) => c.category)} />
           </div>
-          <div className="col-span-3">
-            <div className="flex-between my-2">
-              <div>
-                <div className="flex gap-2 items-center mb-2">
-                  {category && category !== "all" && (
-                    <div className="flex gap-1">
-                      <p className="font-semibold">Category:</p>
-                      <p>{category}</p>
-                    </div>
-                  )}
-                  {price && price != "all" && (
-                    <div className="flex gap-1">
-                      <p className="font-semibold">Price:</p>
-                      <p>{getPriceLabel(price)}</p>
-                    </div>
-                  )}
-                  {rating && rating != "all" && (
-                    <div className="flex gap-1">
-                      <p className="font-semibold">Rating:</p>
-                      <p>{rating + " stars & above"}</p>
-                    </div>
-                  )}
-                  {((category && category != "all") ||
-                    (price && price != "all") ||
-                    (rating && rating != "all")) && (
-                    <Button asChild variant="outline">
-                      <Link href="/products">Clear Filters</Link>
-                    </Button>
-                  )}
-                </div>
+          <div className="col-span-4 sm:col-span-3">
+            <div className="flex flex-col xl:flex-row  my-2">
+              <div className="flex flex-col lg:flex-row gap-2 lg:items-center mb-2">
+                {category && category !== "all" && (
+                  <div className="flex gap-1">
+                    <p className="font-semibold">Category:</p>
+                    <p>{category}</p>
+                  </div>
+                )}
+                {price && price != "all" && (
+                  <div className="flex gap-1">
+                    <p className="font-semibold">Price:</p>
+                    <p>{getPriceLabel(price)}</p>
+                  </div>
+                )}
+                {rating && rating != "all" && (
+                  <div className="flex gap-1">
+                    <p className="font-semibold">Rating:</p>
+                    <p>{rating + " stars & above"}</p>
+                  </div>
+                )}
+                {((category && category != "all") ||
+                  (price && price != "all") ||
+                  (rating && rating != "all")) && (
+                  <Button asChild variant="outline">
+                    <Link href="/products">Clear Filters</Link>
+                  </Button>
+                )}
               </div>
               <Sorting />
             </div>

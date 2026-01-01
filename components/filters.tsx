@@ -5,6 +5,7 @@ import { prices } from "@/lib/constants";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 const ratings = ["4", "3", "2", "1"];
 const Filters = ({ categories }: { categories: string[] }) => {
   const searchParams = useSearchParams();
@@ -35,10 +36,10 @@ const Filters = ({ categories }: { categories: string[] }) => {
     router.push(newUrl);
   };
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <div>
         <p className="my-1">Category</p>
-        <div className="flex flex-col">
+        <div className="flex flex-col items-start">
           <Button
             variant="link"
             type="button"
@@ -52,7 +53,7 @@ const Filters = ({ categories }: { categories: string[] }) => {
               variant="link"
               key={c}
               onClick={() => handleSubmit({ category: c })}
-              className={category == c ? "font-semibold" : ""}
+              className={cn(category == c ? "font-semibold" : "")}
             >
               {c}
             </Button>
@@ -61,7 +62,7 @@ const Filters = ({ categories }: { categories: string[] }) => {
       </div>
       <div>
         <p className="my-1">Price</p>
-        <div className="flex flex-col">
+        <div className="flex flex-col items-start">
           <Button
             variant="link"
             onClick={() => handleSubmit({ price: "all" })}
@@ -83,7 +84,7 @@ const Filters = ({ categories }: { categories: string[] }) => {
       </div>
       <div>
         <p className="my-1">Ratings</p>
-        <div className="flex flex-col">
+        <div className="flex flex-col items-start">
           <Button
             variant="link"
             onClick={() => handleSubmit({ rating: "all" })}

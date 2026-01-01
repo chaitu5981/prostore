@@ -41,9 +41,14 @@ const Menu = ({ role }: { role?: string }) => {
       <Link href="/cart" className="flex gap-1">
         <div className="relative">
           <ShoppingCartIcon size={20} />
-          <Suspense fallback={<Loader size={10} />}>
-            <CartBadge />
-          </Suspense>
+          <Suspense
+            fallback={
+              <div className="h-5 min-w-5 rounded-full px-1 absolute bg-blue-500 -right-3 -top-3">
+                <Loader size={10} />
+              </div>
+            }
+          ></Suspense>
+          <CartBadge />
         </div>
         <p>Cart</p>
       </Link>
