@@ -10,6 +10,7 @@ import { paypal } from "../paypal";
 import { PaymentResult, ShippingAddress } from "@/types";
 import { OrderWhereInput, ProductWhereInput } from "@/generated/prisma/models";
 import { revalidatePath } from "next/cache";
+import { sendMail } from "@/email";
 
 export const getOrderById = async (orderId: string) => {
   const order = await prisma.order.findFirst({
@@ -250,6 +251,21 @@ export const updateOrderToPaid = async (
       },
     });
   });
+  const updatedOrder = await prisma.order.findFirst({
+    where: {
+      id: orderId,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+  console.log(updatedOrder);
+  await sendMail(updatedOrder?.user.email as string);
 };
 
 export const getMyOrders = async ({
