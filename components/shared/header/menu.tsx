@@ -13,6 +13,7 @@ import UserButtonWrapper from "./user-button-wrapper";
 import AdminNavLinks from "./admin-nav-links";
 import NavLinks from "./nav-links";
 import SearchForm from "./search-form";
+import SheetMenu from "./sheet";
 
 const CartBadge = async () => {
   const cart = await getCart();
@@ -35,6 +36,7 @@ const Menu = ({ role }: { role?: string }) => {
       )}
     </div>
   );
+
   const menuItems2 = (
     <div className="md:flex-row flex flex-col  gap-4 md:items-center md:ml-auto">
       <ModeToggle />
@@ -63,26 +65,7 @@ const Menu = ({ role }: { role?: string }) => {
       {<SearchForm />}
       <div className="items-center hidden md:flex gap-4">{menuItems2}</div>
       <div className="md:hidden">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant={"ghost"}
-              size={"icon"}
-              aria-label="Open menu"
-              type="button"
-              className="ml-auto"
-            >
-              <EllipsisVertical className="size-6" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="flex flex-col gap-4 items-start  px-3 ">
-            <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
-            </SheetHeader>
-            {menuItems}
-            {menuItems2}
-          </SheetContent>
-        </Sheet>
+        <SheetMenu menuItems={menuItems} menuItems2={menuItems2} />
       </div>
     </div>
   );
