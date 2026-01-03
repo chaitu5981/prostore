@@ -1,3 +1,4 @@
+import DealCountdown from "@/components/deal-countdown";
 import Loader from "@/components/Loader";
 import BannerCarousel from "@/components/shared/product/banner-carousel";
 import ProductList from "@/components/shared/product/ProductList";
@@ -24,6 +25,7 @@ const HomePageContent = async () => {
           </Link>
         </Button>
       </div>
+      <DealCountdown />
     </div>
   );
 };
