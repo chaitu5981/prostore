@@ -37,7 +37,7 @@ const Pagination = ({ noOfPages }: { noOfPages: number }) => {
     });
   const changeLimit = (v: string) =>
     startChangingLimit(() => {
-      newParams = { ...newParams, limit: v };
+      newParams = { ...newParams, limit: v, page: "1" };
       router.push(`${pathname}?${new URLSearchParams(newParams).toString()}`);
     });
   return (
