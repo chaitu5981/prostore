@@ -17,7 +17,7 @@ export async function POST(request: Request) {
             product_data: {
               name: "Shirt",
             },
-            unit_amount: body.price * 100,
+            unit_amount: Math.round(body.price * 100),
           },
           quantity: 1,
         },
