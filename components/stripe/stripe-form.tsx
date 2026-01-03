@@ -4,7 +4,6 @@ import { FormEvent, useState } from "react";
 import axios from "axios";
 import Loader from "../Loader";
 const StripeForm = ({ price, orderId }: { price: number; orderId: string }) => {
-  4;
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -13,6 +12,7 @@ const StripeForm = ({ price, orderId }: { price: number; orderId: string }) => {
       price,
       orderId,
     });
+    console.log(data);
     if (data.url) window.location.href = data.url;
     setLoading(false);
   };
