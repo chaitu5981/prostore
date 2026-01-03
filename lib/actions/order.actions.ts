@@ -7,7 +7,7 @@ import { insertOrderItemSchema, insertOrderSchema } from "../validators";
 import { prisma } from "../prisma";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { paypal } from "../paypal";
-import { PaymentResult, ShippingAddress } from "@/types";
+import { Order, PaymentResult, ShippingAddress } from "@/types";
 import { OrderWhereInput, ProductWhereInput } from "@/generated/prisma/models";
 import { revalidatePath } from "next/cache";
 import { sendMail } from "@/email";
@@ -262,10 +262,23 @@ export const updateOrderToPaid = async (
           email: true,
         },
       },
+      orderItems: true,
     },
   });
-  console.log(updatedOrder);
-  await sendMail(updatedOrder?.user.email as string);
+  if (!updatedOrder) throw new Error("Updated Order not found");
+  await sendMail({
+    ...updatedOrder,
+    itemsPrice: updatedOrder?.itemsPrice.toString(),
+    taxPrice: updatedOrder?.taxPrice.toString(),
+    shippingPrice: updatedOrder?.shippingPrice.toString(),
+    totalPrice: updatedOrder?.totalPrice.toString(),
+    shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+    paymentResult: updatedOrder.paymentResult as PaymentResult,
+    orderItems: updatedOrder.orderItems.map((orderItem) => ({
+      ...orderItem,
+      price: orderItem.price.toString(),
+    })),
+  });
 };
 
 export const getMyOrders = async ({
